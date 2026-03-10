@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* ============================================
+   THE ELEGANT BRUTALIST — Design System
+   CSS Variables + Tailwind v4 Theme
+   ============================================ */
+
+/* --- Light Mode (Default) --- */
+:root {
+  /* Background */
+  --background: 40 33% 98%;       /* Warm off-white: #FAF9F6 */
+  --surface: 40 25% 94%;          /* Subtle warm gray: #F0EDE8 */
+  --surface-alt: 40 20% 90%;      /* Deeper warm gray */
+
+  /* Foreground / Text */
+  --foreground: 0 0% 7%;          /* Near-black: #121212 */
+  --foreground-muted: 0 0% 40%;   /* Muted gray for secondary text */
+  --foreground-subtle: 0 0% 60%;  /* Subtle gray for hints */
+
+  /* Accent (Brutalist Bold) */
+  --accent: 0 72% 51%;            /* Brutalist red: #D93025 */
+  --accent-foreground: 0 0% 100%; /* White text on accent */
+
+  /* Borders & Dividers */
+  --border: 0 0% 85%;             /* Light border */
+  --border-strong: 0 0% 7%;       /* Strong/brutalist border */
+
+  /* Interactive */
+  --ring: 0 72% 51%;              /* Focus ring = accent */
+  --highlight: 48 96% 53%;        /* Highlight yellow: #F5C518 */
+}
+
+/* --- Dark Mode --- */
+.dark {
+  /* Background */
+  --background: 0 0% 4%;          /* Deep black: #0A0A0A */
+  --surface: 0 0% 9%;             /* Dark surface: #171717 */
+  --surface-alt: 0 0% 13%;        /* Slightly lighter surface */
+
+  /* Foreground / Text */
+  --foreground: 0 0% 93%;         /* Off-white: #EDEDED */
+  --foreground-muted: 0 0% 63%;   /* Muted */
+  --foreground-subtle: 0 0% 45%;  /* Subtle */
+
+  /* Accent */
+  --accent: 0 84% 60%;            /* Brighter red for dark bg: #EF4444 */
+  --accent-foreground: 0 0% 100%;
+
+  /* Borders & Dividers */
+  --border: 0 0% 18%;             /* Subtle dark border */
+  --border-strong: 0 0% 93%;      /* Bright border for contrast */
+
+  /* Interactive */
+  --ring: 0 84% 60%;
+  --highlight: 48 96% 53%;
+}
+
+/* ============================================
+   Tailwind v4 Theme — Token Registration
+   ============================================ */
+@theme inline {
+  /* Colors — all HSL via CSS variables */
+  --color-background: hsl(var(--background));
+  --color-surface: hsl(var(--surface));
+  --color-surface-alt: hsl(var(--surface-alt));
+
+  --color-foreground: hsl(var(--foreground));
+  --color-foreground-muted: hsl(var(--foreground-muted));
+  --color-foreground-subtle: hsl(var(--foreground-subtle));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-border-strong: hsl(var(--border-strong));
+
+  --color-ring: hsl(var(--ring));
+  --color-highlight: hsl(var(--highlight));
+
+  /* Typography */
+  --font-heading: var(--font-syne), "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
+}
+
+/* Headings default to Syne */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+/* Smooth transitions when switching themes */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Selection styling */
+::selection {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Scrollbar styling (Webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--surface));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--foreground-subtle));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground-muted));
+}
