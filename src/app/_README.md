@@ -1,5 +1,19 @@
-# `/app` — Routes & Layouts
+# /app - Routes and layouts
 
-Next.js App Router directory. Each subfolder becomes a route, and `layout.tsx` files define shared UI wrappers.
+This folder is the App Router entrypoint for Marketiv.
 
-**📱 Mobile Analogy:** Equivalent to the **Navigation Graph / Router** in Android (Jetpack Navigation) or Flutter (`GoRouter`). Each folder is a "screen" destination, and `layout.tsx` is like a `Scaffold` wrapping child routes.
+Target route architecture:
+
+- /(home): public landing and product narrative
+- /(auth): login, register, account recovery
+- /(marketplace): public browse and discovery
+- /dashboard/(umkm): UMKM workspace
+- /dashboard/(creator): Creator workspace
+- /dashboard/(shared): shared authenticated pages (account, inbox, notifications)
+
+Boundary rule:
+
+- UMKM-specific UI and state must not be reused inside Creator pages.
+- Creator-specific UI and state must not be reused inside UMKM pages.
+
+Legacy portfolio routes such as /about, /contact, and /projects are kept temporarily for migration and should be treated as deprecated.

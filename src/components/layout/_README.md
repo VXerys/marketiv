@@ -1,5 +1,14 @@
-# `/components/layout` — Layout Primitives
+# /components/layout - Layout primitives
 
-Structural components: Navbar, Footer, Container, PageTransition, SmoothScroller. These define the app's visual skeleton.
+Structural wrappers for Marketiv pages.
 
-**📱 Mobile Analogy:** Like the **Scaffold, AppBar, BottomNavigationBar, and Drawer** in Flutter, or the `CoordinatorLayout` + `Toolbar` pattern in Android — the persistent structural shell around your content.
+Examples:
+
+- public header and footer
+- marketplace shell
+- dashboard shell
+- auth shell
+
+Guideline:
+
+- Keep layout components free from domain-heavy business logic.

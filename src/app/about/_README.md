@@ -1,5 +1,10 @@
-# `/about` — About Page Route
+# /about - Deprecated portfolio route
 
-Contains the About page (`page.tsx`) with personal bio, skills, and experience timeline.
+This route belongs to the previous portfolio structure.
 
-**📱 Mobile Analogy:** Like a dedicated **Fragment/Screen** in Android or a **StatelessWidget page** in Flutter — a self-contained route for displaying profile information.
+Migration target:
+
+- Move profile/account experiences to /dashboard/(shared)/account
+- Keep this folder only as temporary migration reference
+
+Do not build new Marketiv features under this route.

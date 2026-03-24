@@ -1,5 +1,9 @@
-# `/components/animations` — Animation Wrapper Components
+# /components/animations - Animation wrappers
 
-GSAP-powered animation components: RevealOnScroll, TextSplit, MagneticButton, ParallaxLayer, StaggerChildren. Wrap content to add motion.
+Reusable animation wrappers and helpers for GSAP and ScrollTrigger integration.
 
-**📱 Mobile Analogy:** Like Flutter's `AnimatedBuilder`, `Hero`, `SlideTransition` widgets, or Android's `MotionLayout` — declarative animation wrappers that add motion without polluting business logic.
+Guidelines:
+
+- Use useGSAP with scoped refs
+- Keep animation logic isolated from business logic
+- Respect reduced-motion behavior where relevant

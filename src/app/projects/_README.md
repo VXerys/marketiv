@@ -1,5 +1,10 @@
-# `/projects` — Projects Page Route
+# /projects - Deprecated portfolio route
 
-Contains the Projects listing page and dynamic `[slug]` routes for individual project detail pages.
+This route belongs to the previous portfolio structure.
 
-**📱 Mobile Analogy:** Like a **RecyclerView/ListView screen** with navigation to a **Detail screen** — equivalent to a master-detail flow in Android or Flutter's `Navigator.push` to a detail page.
+Migration target:
+
+- Replace listing/detail with / (marketplace) browse/detail flow
+- Map creator offerings to Creator dashboard domains
+
+Do not build new Marketiv features under this route.

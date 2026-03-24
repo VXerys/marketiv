@@ -1,5 +1,16 @@
-# `/types` — TypeScript Type Definitions
+# /types - Shared TypeScript contracts
 
-Shared TypeScript interfaces, types, and enums: `Project`, `Skill`, `ContactForm`, `GitHubRepo`, `AnimationConfig`, etc.
+Shared contracts for Marketiv domain and API mapping.
 
-**📱 Mobile Analogy:** Like **data class / model** files in Kotlin or **freezed models** in Flutter — the contract layer defining the shape of your data across the entire app.
+Expected domains:
+
+- product
+- order
+- campaign
+- user
+- supabase generated types
+
+Guideline:
+
+- Use strict typing and avoid any.
+- Keep domain contracts in this folder unless type scope is fully local.

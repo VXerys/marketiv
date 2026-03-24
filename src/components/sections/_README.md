@@ -1,5 +1,13 @@
-# `/components/sections` — Page Section Components
+# /components/sections - Composable page sections
 
-Full-width page sections: Hero, About, ProjectsGrid, Skills, Testimonials, CTA, etc. Each section is a self-contained block that composes a page.
+High-level sections used to compose long-form pages.
 
-**📱 Mobile Analogy:** Like **SliverList items** or individual `ViewHolder` sections in a long scrollable screen — each is a distinct, composable block within a `SingleChildScrollView`.
+Primary usage:
+
+- landing hero and value sections
+- marketplace narrative and trust sections
+- campaign and rate-card explainer sections
+
+Guideline:
+
+- Keep sections self-contained and reusable across pages.

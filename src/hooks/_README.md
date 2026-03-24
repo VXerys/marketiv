@@ -1,5 +1,16 @@
-# `/hooks` — Custom React Hooks
+# /hooks - Custom React hooks
 
-Reusable hooks for encapsulating stateful logic: `useScrollProgress`, `useMediaQuery`, `useAnimation`, `useSupabase`, etc.
+Reusable client-side hooks for Marketiv UX behavior.
 
-**📱 Mobile Analogy:** Like **ViewModel** in Android MVVM or **Riverpod/Bloc providers** in Flutter — encapsulated, reusable state logic that separates concerns from the UI layer.
+Typical hooks:
+
+- useAuth
+- useCart
+- useMarketplaceFilter
+- useDebounce
+- useMediaQuery
+
+Guideline:
+
+- Keep hooks focused and side-effect safe.
+- Avoid embedding server data orchestration logic in hooks.

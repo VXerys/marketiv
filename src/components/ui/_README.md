@@ -1,5 +1,13 @@
-# `/components/ui` — Atomic/Base UI Components
+# /components/ui - Atomic design-system primitives
 
-Smallest reusable elements: Button, Card, Badge, Input, Modal, Tooltip, etc. These are design-system primitives with no business logic.
+Small reusable UI components with no domain logic.
 
-**📱 Mobile Analogy:** Like Flutter's `ElevatedButton`, `Card`, `TextField` custom wrappers, or Android's **Material Components** — styled atoms used throughout the app.
+Examples:
+
+- button, card, badge
+- input, textarea, form controls
+- dialog, tooltip, toast
+
+Guideline:
+
+- Keep style tokens and accessibility consistent across UMKM and Creator spaces.

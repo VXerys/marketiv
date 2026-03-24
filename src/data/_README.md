@@ -1,5 +1,15 @@
-# `/data` — Static Data & Constants
+# /data - Static config and constants
 
-Hardcoded portfolio data: project entries, skills list, navigation links, social media URLs, site metadata, and configuration constants.
+Static and semi-static config for Marketiv.
 
-**📱 Mobile Analogy:** Like a **local JSON / constants file** or `sealed class` enums in Android — static data that doesn't change at runtime, similar to Flutter's `assets/data/` or a `Constants.dart` file.
+Typical files:
+
+- navigation config
+- category list
+- label constants
+- site metadata
+
+Guideline:
+
+- Keep data declarative and side-effect free.
+- Move mutable business data to database-backed sources.

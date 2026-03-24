@@ -1,5 +1,8 @@
-# `/lib/graphql` — GraphQL Client & Queries
+# /lib/graphql - External GraphQL integrations
 
-GraphQL client setup (`graphql-request`) and query definitions for fetching data from the GitHub GraphQL API (repos, contributions, pinned items).
+GraphQL client and query modules for external integrations.
 
-**📱 Mobile Analogy:** Like the **Repository + API Service** layer in Android (Retrofit + GraphQL) or Flutter's `GraphQLClient` — centralized query definitions and a single client instance.
+Guideline:
+
+- Keep query strings centralized.
+- Add consistent error handling and response mapping before UI consumption.

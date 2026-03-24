@@ -1,24 +1,13 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { SmoothScrollProvider } from "@/providers/smooth-scroll-provider";
+import { inter, playfairDisplay, spaceGrotesk } from "@/lib/fonts";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "Sehan — Portfolio",
+  title: "Marketiv",
   description:
-    "Personal portfolio of Sehan. 4+ years of Mobile Development experience, building premium digital experiences.",
+    "Marketiv is a hybrid marketplace connecting UMKM and micro creators through campaign and rate-card collaboration models.",
 };
 
 export default function RootLayout({
@@ -29,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${syne.variable} ${dmSans.variable} font-body antialiased bg-background text-foreground`}
+        className={`${playfairDisplay.variable} ${inter.variable} ${spaceGrotesk.variable} font-body antialiased bg-background text-foreground`}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

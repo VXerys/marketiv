@@ -1,5 +1,16 @@
-# `/providers` — Context Providers
+# /providers - App-level providers
 
-React Context providers that wrap the app: ThemeProvider, LenisProvider (smooth scroll), AnalyticsProvider, CursorProvider, etc.
+Global providers that wrap the app and expose cross-route behavior.
 
-**📱 Mobile Analogy:** Like **dependency injection modules** (Dagger/Hilt `@Module` in Android) or **ProviderScope/MultiProvider** in Flutter — global services injected at the app root and accessible by all descendants.
+Current and planned providers:
+
+- theme provider
+- smooth scroll provider
+- auth provider
+- marketplace provider
+- cart provider
+
+Guideline:
+
+- Keep provider responsibilities narrow.
+- Put business data in server boundaries when possible, and reserve provider state for client-side UX state.

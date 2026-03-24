@@ -1,5 +1,10 @@
-# `/contact` — Contact Page Route
+# /contact - Deprecated portfolio route
 
-Contains the Contact page with a form for inquiries, integrated with Supabase for message storage.
+This route belongs to the previous portfolio structure.
 
-**📱 Mobile Analogy:** Like a **Form Screen** in Flutter/Android that posts data to a backend — similar to an `EditText` + `Button` screen that calls a `Repository.submit()` method.
+Migration target:
+
+- Move communication flows into authenticated messaging and notifications areas
+- Use /dashboard/(shared)/inbox for future in-app communications
+
+Do not build new Marketiv features under this route.
