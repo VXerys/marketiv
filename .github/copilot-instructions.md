@@ -17,6 +17,13 @@ Semua output agent harus mengikuti aturan di bawah ini tanpa pengecualian.
 - Setiap page.tsx wajib memiliki metadata atau generateMetadata untuk SEO.
 - Untuk route yang fetch data, sediakan loading.tsx dan error.tsx saat relevan.
 
+## Home Landing Slicing Rules
+- Untuk section private landing home, gunakan co-location di src/app/(home)/_sections.
+- Setiap section wajib dipecah minimal menjadi: marketiv-*.tsx, *.animations.ts, *.data.ts, dan index.ts.
+- Pertahankan named export untuk komponen section agar konsisten dengan arsitektur saat ini.
+- Gunakan subcomponent lokal di folder section bila hanya dipakai section tersebut; pindahkan ke src/components hanya jika reuse lintas route.
+- Untuk konsumsi dari luar section folder, gunakan barrel export index.ts, bukan import langsung ke file internal.
+
 ## Animation System (Hybrid)
 - Makro-animasi (scroll reveal, parallax, section transitions, page transitions) wajib menggunakan GSAP + Lenis.
 - Dilarang memakai useEffect murni untuk lifecycle GSAP. Wajib pakai useGSAP dari @gsap/react.
