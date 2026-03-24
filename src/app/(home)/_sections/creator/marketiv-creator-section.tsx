@@ -2,71 +2,16 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-
-gsap.registerPlugin(ScrollTrigger);
-
-interface CreatorFeature {
-  id: string;
-  title: string;
-  description: string;
-}
-
-interface CreatorMetric {
-  label: string;
-  value: string;
-}
-
-const CREATOR_FEATURES: CreatorFeature[] = [
-  {
-    id: "01",
-    title: "PERFORMA YANG TERUKUR",
-    description:
-      "Setiap konten ditrack secara real-time. UMKM melihat performa aktual, kreator mendapat feedback yang jelas.",
-  },
-  {
-    id: "02",
-    title: "KONTROL BRIEF YANG JELAS",
-    description:
-      "Template brief membuat ekspektasi sinkron dari awal. Revisi lebih sedikit, hasil konten lebih tepat sasaran.",
-  },
-  {
-    id: "03",
-    title: "EKOSISTEM KAMPANYE BERULANG",
-    description:
-      "Bukan transaksi sekali jalan. Kreator yang konsisten dapat repeat campaign dan pendapatan yang stabil.",
-  },
-];
-
-const CREATOR_METRICS: CreatorMetric[] = [
-  { label: "Views tervalidasi", value: "2.8M+" },
-  { label: "CPV rata-rata", value: "Rp48" },
-  { label: "Kampanye aktif", value: "124" },
-  { label: "Kreator bergabung", value: "4.3K" },
-];
+import { useGSAP } from "@/lib/gsap";
+import { animateCreatorSection } from "./marketiv-creator-section.animations";
+import { CREATOR_FEATURES, CREATOR_METRICS } from "./marketiv-creator-section.data";
 
 export function MarketivCreatorSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     () => {
-      gsap
-        .timeline({
-          defaults: { ease: "power2.out" },
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            end: "bottom 60%",
-            markers: false,
-          },
-        })
-        .from(".creator-eyebrow", { y: 14, opacity: 0, duration: 0.35 })
-        .from(".creator-title-line", { yPercent: 105, opacity: 0, duration: 0.6, stagger: 0.09 }, "-=0.05")
-        .from(".creator-intro", { y: 18, opacity: 0, duration: 0.45 }, "-=0.2")
-        .from(".creator-feature", { y: 20, opacity: 0, duration: 0.45, stagger: 0.1 }, "-=0.2")
-        .from(".creator-cta", { y: 14, opacity: 0, duration: 0.35 }, "-=0.15")
-        .from(".creator-visual", { scale: 0.97, opacity: 0, duration: 0.55 }, "-=0.25")
-        .from(".creator-metric-card", { x: 24, opacity: 0, duration: 0.45 }, "-=0.2");
+      animateCreatorSection(sectionRef.current);
     },
     { scope: sectionRef }
   );

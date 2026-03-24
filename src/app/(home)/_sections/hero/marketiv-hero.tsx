@@ -3,38 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { useGSAP } from "@/lib/gsap";
 import { publicNav } from "@/data/nav";
-
-gsap.registerPlugin(ScrollTrigger);
+import { animateHeroSection } from "./marketiv-hero.animations";
 
 export function MarketivHero() {
   const rootRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     () => {
-      const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      timeline
-        .from(".hero-nav-item", { y: -18, opacity: 0, duration: 0.45, stagger: 0.05 })
-        .from(".hero-season", { y: 18, opacity: 0, duration: 0.4 }, "-=0.2")
-        .from(".hero-title-line", { yPercent: 105, opacity: 0, duration: 0.7, stagger: 0.1 }, "-=0.15")
-        .from(".hero-card", { y: 26, opacity: 0, duration: 0.55, stagger: 0.1 }, "-=0.45")
-        .from(".hero-cta", { y: 12, opacity: 0, duration: 0.4, stagger: 0.08 }, "-=0.25");
-
-      gsap.from(".hero-title-wrap", {
-        scale: 1.04,
-        opacity: 0.88,
-        duration: 1.2,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: rootRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-          markers: false,
-        },
-      });
+      animateHeroSection(rootRef.current);
     },
     { scope: rootRef }
   );

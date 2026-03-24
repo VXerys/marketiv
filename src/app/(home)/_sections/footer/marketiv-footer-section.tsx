@@ -2,73 +2,21 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-
-gsap.registerPlugin(ScrollTrigger);
-
-interface FooterLinkItem {
-  label: string;
-  href: string;
-}
-
-interface CommitmentItem {
-  title: string;
-  description: string;
-}
-
-const PLATFORM_LINKS: FooterLinkItem[] = [
-  { label: "Untuk Kreator", href: "/dashboard/creator" },
-  { label: "Untuk UMKM", href: "/dashboard/umkm" },
-  { label: "Campaign Aktif", href: "/marketplace" },
-  { label: "Rate Card", href: "/marketplace" },
-  { label: "Escrow", href: "/marketplace" },
-];
-
-const COMPANY_LINKS: FooterLinkItem[] = [
-  { label: "Tentang Kami", href: "/about" },
-  { label: "Blog", href: "/marketplace" },
-  { label: "Karir", href: "/marketplace" },
-  { label: "Press Kit", href: "/marketplace" },
-  { label: "Kontak", href: "/contact" },
-];
-
-const LEGAL_LINKS: FooterLinkItem[] = [
-  { label: "Syarat & Ketentuan", href: "/marketplace" },
-  { label: "Kebijakan Privasi", href: "/marketplace" },
-  { label: "Cookie Policy", href: "/marketplace" },
-];
-
-const COMMITMENTS: CommitmentItem[] = [
-  {
-    title: "SDG 8 - PEKERJAAN LAYAK",
-    description: "Mendukung pertumbuhan ekonomi inklusif UMKM.",
-  },
-  {
-    title: "SDG 9 - INOVASI INDUSTRI",
-    description: "Infrastruktur digital untuk kreator lokal.",
-  },
-];
+import { useGSAP } from "@/lib/gsap";
+import { animateFooterSection } from "./marketiv-footer-section.animations";
+import {
+  COMMITMENTS,
+  COMPANY_LINKS,
+  LEGAL_LINKS,
+  PLATFORM_LINKS,
+} from "./marketiv-footer-section.data";
 
 export function MarketivFooterSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     () => {
-      gsap
-        .timeline({
-          defaults: { ease: "power2.out" },
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            markers: false,
-          },
-        })
-        .from(".footer-top-line", { scaleX: 0, duration: 0.45, transformOrigin: "left center" })
-        .from(".footer-title-line", { yPercent: 102, opacity: 0, duration: 0.68, stagger: 0.08 }, "-=0.18")
-        .from(".footer-cta", { y: 16, opacity: 0, duration: 0.4, stagger: 0.08 }, "-=0.2")
-        .from(".footer-main-divider", { scaleX: 0, duration: 0.45, transformOrigin: "left center" }, "-=0.15")
-        .from(".footer-column", { y: 18, opacity: 0, duration: 0.45, stagger: 0.09 }, "-=0.15")
-        .from(".footer-legal", { y: 10, opacity: 0, duration: 0.35 }, "-=0.15");
+      animateFooterSection(sectionRef.current);
     },
     { scope: sectionRef }
   );

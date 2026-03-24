@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { MarketivHero } from "@/components/sections/marketiv-hero";
-import { MarketivFearSection } from "@/components/sections/marketiv-fear-section";
-import { MarketivCreatorSection } from "@/components/sections/marketiv-creator-section";
-import { MarketivUmkmSection } from "@/components/sections/marketiv-umkm-section";
-import { MarketivRunwaySection } from "@/components/sections/marketiv-runway-section";
-import { MarketivFooterSection } from "@/components/sections/marketiv-footer-section";
+import {
+  MarketivCreatorSection,
+  MarketivFearSection,
+  MarketivFooterSection,
+  MarketivHero,
+  MarketivRunwaySection,
+  MarketivUmkmSection,
+} from "./_sections";
 
 export const metadata: Metadata = {
   title: "Marketiv | Hybrid Marketplace",

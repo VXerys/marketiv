@@ -1,13 +1,8 @@
-# /components/sections - Composable page sections
+# /components/sections - Shared Sections Only
 
-High-level sections used to compose long-form pages.
+Folder ini khusus untuk section yang reusable lintas route.
 
-Primary usage:
+Catatan:
 
-- landing hero and value sections
-- marketplace narrative and trust sections
-- campaign and rate-card explainer sections
-
-Guideline:
-
-- Keep sections self-contained and reusable across pages.
+- Section landing page utama sudah di-co-locate ke `src/app/(home)/_sections`.
+- Tambahkan file di sini hanya jika section dipakai di lebih dari satu route.

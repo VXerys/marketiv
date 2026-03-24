@@ -1,87 +1,16 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-
-gsap.registerPlugin(ScrollTrigger);
-
-interface RunwayStep {
-  number: string;
-  stepLabel: string;
-  title: string;
-  description: string;
-}
-
-const RUNWAY_STEPS: RunwayStep[] = [
-  {
-    number: "01",
-    stepLabel: "STEP 01",
-    title: "UNGGAH ASET",
-    description: "Upload foto, video, atau deskripsi produk UMKM ke platform.",
-  },
-  {
-    number: "02",
-    stepLabel: "STEP 02",
-    title: "AI MENYUSUN\nNASKAH",
-    description: "Model AI kami mengurai brand voice dan menghasilkan brief kreatif.",
-  },
-  {
-    number: "03",
-    stepLabel: "STEP 03",
-    title: "KREATOR KLAIM",
-    description: "Micro-creator memilih campaign yang relevan dengan niche mereka.",
-  },
-  {
-    number: "04",
-    stepLabel: "STEP 04",
-    title: "BAYAR PER VIEWS",
-    description: "Dana escrow dilepas hanya setelah views terverifikasi. Zero risk.",
-  },
-];
-
-const TICKER_ITEMS = [
-  "AI BRIEF",
-  "KREATOR KLAIM",
-  "BAYAR PER VIEWS",
-  "UNGGAH ASET",
-  "AI BRIEF",
-  "KREATOR KLAIM",
-  "BAYAR PER VIEWS",
-  "UNGGAH ASET",
-];
+import { useGSAP } from "@/lib/gsap";
+import { animateRunwaySection } from "./marketiv-runway-section.animations";
+import { RUNWAY_STEPS, TICKER_ITEMS } from "./marketiv-runway-section.data";
 
 export function MarketivRunwaySection() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     () => {
-      gsap
-        .timeline({
-          defaults: { ease: "power2.out" },
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            end: "bottom 60%",
-            markers: false,
-          },
-        })
-        .from(".runway-eyebrow", { y: 14, opacity: 0, duration: 0.35 })
-        .from(".runway-title", { yPercent: 102, opacity: 0, duration: 0.65 }, "-=0.1")
-        .from(".runway-divider", { scaleX: 0, transformOrigin: "left center", duration: 0.45 }, "-=0.25")
-        .from(".runway-card", { y: 24, opacity: 0, duration: 0.5, stagger: 0.09 }, "-=0.2")
-        .from(".runway-ticker-shell", { y: 8, opacity: 0, duration: 0.35 }, "-=0.18");
-
-      gsap.to(".runway-ticker-track", {
-        xPercent: -34,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.85,
-          markers: false,
-        },
-      });
+      animateRunwaySection(sectionRef.current);
     },
     { scope: sectionRef }
   );

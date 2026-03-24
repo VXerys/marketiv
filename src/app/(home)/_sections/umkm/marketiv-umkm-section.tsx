@@ -1,113 +1,17 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-
-gsap.registerPlugin(ScrollTrigger);
-
-type EscrowStatus = "VERIFIED" | "PROCESSING";
-
-interface EscrowRow {
-  creator: string;
-  niche: string;
-  views: string;
-  status: EscrowStatus;
-  escrow: string;
-}
-
-interface UmkmFeature {
-  label: string;
-  title: string;
-  description: string;
-}
-
-const ESCROW_ROWS: EscrowRow[] = [
-  {
-    creator: "@haniafood",
-    niche: "Kuliner",
-    views: "128K",
-    status: "VERIFIED",
-    escrow: "Rp 320K",
-  },
-  {
-    creator: "@stylebyara",
-    niche: "Fashion",
-    views: "89K",
-    status: "VERIFIED",
-    escrow: "Rp 210K",
-  },
-  {
-    creator: "@techwithbimo",
-    niche: "Tech",
-    views: "210K",
-    status: "PROCESSING",
-    escrow: "Rp 525K",
-  },
-  {
-    creator: "@dapur.id",
-    niche: "Kuliner",
-    views: "75K",
-    status: "VERIFIED",
-    escrow: "Rp 190K",
-  },
-];
-
-const UMKM_FEATURES: UmkmFeature[] = [
-  {
-    label: "KEAMANAN",
-    title: "SISTEM ESCROW",
-    description: "Dana terlindungi sampai kampanye selesai dan terverifikasi. Zero fraud.",
-  },
-  {
-    label: "KECERDASAN",
-    title: "AI BRIEF GEN",
-    description: "Deskripsikan produkmu, AI susun brief kreatif siap pakai.",
-  },
-  {
-    label: "TRANSPARANSI",
-    title: "RATE CARD LIVE",
-    description: "Harga transparan per views. Tidak ada biaya tersembunyi.",
-  },
-];
-
-function StatusBadge({ status }: { status: EscrowStatus }) {
-  const isVerified = status === "VERIFIED";
-
-  return (
-    <span
-      className={`inline-flex min-w-[78px] items-center justify-center border px-2 py-1 font-label text-[9px] tracking-[0.16em] ${
-        isVerified
-          ? "border-foreground bg-foreground text-background"
-          : "border-border-strong/45 bg-transparent text-foreground-subtle"
-      }`}
-    >
-      {status}
-    </span>
-  );
-}
+import { useGSAP } from "@/lib/gsap";
+import { animateUmkmSection } from "./marketiv-umkm-section.animations";
+import { ESCROW_ROWS, UMKM_FEATURES } from "./marketiv-umkm-section.data";
+import { StatusBadge } from "./marketiv-umkm-status-badge";
 
 export function MarketivUmkmSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     () => {
-      gsap
-        .timeline({
-          defaults: { ease: "power2.out" },
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            end: "bottom 60%",
-            markers: false,
-          },
-        })
-        .from(".umkm-table-eyebrow", { y: 16, opacity: 0, duration: 0.35 })
-        .from(".umkm-table-shell", { y: 22, opacity: 0, duration: 0.55 }, "-=0.15")
-        .from(".umkm-ai-brief", { y: 14, opacity: 0, duration: 0.4 }, "-=0.22")
-        .from(".umkm-edition-eyebrow", { y: 12, opacity: 0, duration: 0.3 }, "-=0.25")
-        .from(".umkm-title-line", { yPercent: 102, opacity: 0, duration: 0.6, stagger: 0.08 }, "-=0.1")
-        .from(".umkm-feature", { y: 18, opacity: 0, duration: 0.45, stagger: 0.1 }, "-=0.18")
-        .from(".umkm-cta", { y: 12, opacity: 0, duration: 0.35 }, "-=0.15");
+      animateUmkmSection(sectionRef.current);
     },
     { scope: sectionRef }
   );
