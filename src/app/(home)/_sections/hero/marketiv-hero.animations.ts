@@ -1,4 +1,4 @@
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { createSectionScrollTrigger } from "@/lib/animations/scroll-configs";
 
 export function animateHeroSection(section: HTMLElement | null): void {
@@ -25,5 +25,45 @@ export function animateHeroSection(section: HTMLElement | null): void {
       end: "bottom top",
       scrub: true,
     }),
+  });
+
+  if (!section) {
+    return;
+  }
+
+  const navbarStateTimeline = gsap.timeline({
+    paused: true,
+    defaults: { ease: "power2.out" },
+  });
+
+  navbarStateTimeline
+    .to(
+      ".hero-navbar-bg",
+      {
+        autoAlpha: 1,
+        duration: 0.3,
+      },
+      0
+    )
+    .to(
+      ".hero-navbar-divider",
+      {
+        autoAlpha: 1,
+        duration: 0.24,
+      },
+      0
+    );
+
+  if (window.scrollY > 8) {
+    navbarStateTimeline.progress(1);
+  }
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: "top+=8 top",
+    end: "bottom top",
+    onEnter: () => navbarStateTimeline.play(),
+    onEnterBack: () => navbarStateTimeline.play(),
+    onLeaveBack: () => navbarStateTimeline.reverse(),
   });
 }

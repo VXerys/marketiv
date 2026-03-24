@@ -29,30 +29,37 @@ export function MarketivHero() {
       />
       <div className="absolute inset-0 bg-background/84" />
 
-      <header className="relative z-20 flex items-center justify-between border-b border-border px-6 py-4 md:px-12">
-        <span className="hero-nav-item font-heading text-4xl leading-none tracking-tight">MARKETIV</span>
+      <header className="hero-navbar fixed inset-x-0 top-0 z-50">
+        <div className="hero-navbar-bg pointer-events-none absolute inset-0 opacity-0 bg-background/55 backdrop-blur-[7px]" />
+        <div className="hero-navbar-divider pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border opacity-0" />
 
-        <nav className="hidden items-center gap-10 md:flex">
-          {publicNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="hero-nav-item font-label text-xs text-foreground-muted transition-colors hover:text-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="relative z-10 flex w-full items-center justify-between px-6 py-4 md:px-12">
+          <span className="hero-nav-item font-heading text-4xl leading-none tracking-tight">MARKETIV</span>
 
-        <Link
-          href="/login"
-          className="hero-nav-item font-label border-brutal bg-accent px-5 py-2 text-xs text-accent-foreground transition-opacity hover:opacity-90"
-        >
-          Masuk
-        </Link>
+          <div className="pointer-events-none absolute inset-0 hidden items-center justify-center md:flex">
+            <nav className="pointer-events-auto flex items-center gap-10">
+              {publicNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="hero-nav-item font-label text-xs text-foreground-muted transition-colors hover:text-foreground"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <Link
+            href="/login"
+            className="hero-nav-item font-label border-brutal bg-accent px-5 py-2 text-xs text-accent-foreground transition-opacity hover:opacity-90"
+          >
+            Masuk
+          </Link>
+        </div>
       </header>
 
-      <div className="relative z-20 mx-auto grid min-h-[calc(100vh-72px)] w-full max-w-[1400px] grid-cols-1 px-5 pb-10 pt-9 md:px-10 md:pb-14 md:pt-10 lg:grid-cols-[1fr_auto] lg:pr-14 xl:pr-20">
+      <div className="relative z-20 mx-auto grid min-h-screen w-full max-w-[1400px] grid-cols-1 px-5 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32 lg:grid-cols-[1fr_auto] lg:pr-14 xl:pr-20">
         <div className="flex flex-col justify-between">
           <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">SEASON 01 - INDONESIA 2026</div>
 
