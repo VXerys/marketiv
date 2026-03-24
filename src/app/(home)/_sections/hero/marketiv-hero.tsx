@@ -12,7 +12,7 @@ export function MarketivHero() {
 
   useGSAP(
     () => {
-      return animateHeroSection(rootRef.current);
+      animateHeroSection(rootRef.current);
     },
     { scope: rootRef }
   );
@@ -29,33 +29,30 @@ export function MarketivHero() {
       />
       <div className="absolute inset-0 bg-background/84" />
 
-      <header className="hero-nav-root fixed inset-x-0 top-0 z-40 px-3 pt-3 md:px-6 md:pt-4">
-        <div className="hero-nav-shell hero-nav-item mx-auto flex w-full max-w-[1400px] items-center justify-between border border-border-strong bg-background/68 px-4 py-3 shadow-[0_8px_20px_rgba(0,0,0,0.06)] backdrop-blur-[2px] md:px-8">
-          <span className="hero-nav-item font-heading text-3xl leading-none tracking-tight md:text-4xl">MARKETIV</span>
+      <header className="relative z-20 flex items-center justify-between border-b border-border px-6 py-4 md:px-12">
+        <span className="hero-nav-item font-heading text-4xl leading-none tracking-tight">MARKETIV</span>
 
-          <nav aria-label="Menu utama" className="hero-nav-track relative hidden items-center gap-2 rounded-full border border-border/80 bg-surface/45 p-1 md:flex">
-            <span className="hero-nav-indicator pointer-events-none absolute left-1 top-1 z-0 h-[calc(100%-8px)] w-0 rounded-full bg-background/80" />
-            {publicNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="hero-nav-link hero-nav-item relative z-10 rounded-full px-4 py-2 font-label text-xs text-foreground-muted transition-colors duration-300 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+        <nav className="hidden items-center gap-10 md:flex">
+          {publicNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="hero-nav-item font-label text-xs text-foreground-muted transition-colors hover:text-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-          <Link
-            href="/login"
-            className="hero-nav-item font-label border-brutal bg-accent px-4 py-2 text-xs text-accent-foreground transition-opacity duration-300 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:px-5"
-          >
-            Masuk
-          </Link>
-        </div>
+        <Link
+          href="/login"
+          className="hero-nav-item font-label border-brutal bg-accent px-5 py-2 text-xs text-accent-foreground transition-opacity hover:opacity-90"
+        >
+          Masuk
+        </Link>
       </header>
 
-      <div className="relative z-20 mx-auto grid min-h-[calc(100vh-72px)] w-full max-w-[1400px] grid-cols-1 px-5 pb-10 pt-32 md:px-10 md:pb-14 md:pt-36 lg:grid-cols-[1fr_auto] lg:pr-14 xl:pr-20">
+      <div className="relative z-20 mx-auto grid min-h-[calc(100vh-72px)] w-full max-w-[1400px] grid-cols-1 px-5 pb-10 pt-9 md:px-10 md:pb-14 md:pt-10 lg:grid-cols-[1fr_auto] lg:pr-14 xl:pr-20">
         <div className="flex flex-col justify-between">
           <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">SEASON 01 - INDONESIA 2026</div>
 
