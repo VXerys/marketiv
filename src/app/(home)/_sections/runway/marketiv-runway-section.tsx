@@ -16,11 +16,11 @@ export function MarketivRunwaySection() {
   );
 
   return (
-    <section ref={sectionRef} className="border-y border-border bg-background text-foreground">
-      <div className="mx-auto w-full max-w-[1400px] px-5 pt-14 md:px-10 md:pt-20">
+    <section ref={sectionRef} className="overflow-x-clip border-y border-border bg-background text-foreground">
+      <div className="mx-auto w-full max-w-[1320px] px-5 pt-12 md:px-10 md:pt-16">
         <p className="runway-eyebrow font-label text-[10px] tracking-[0.26em] text-foreground-subtle">ALUR EKSEKUSI - 4 TAHAP CEPAT</p>
 
-        <h2 className="runway-title mt-4 font-heading text-[clamp(2.65rem,7vw,5.8rem)] leading-[0.9] tracking-[-0.04em]">GROWTH RUNWAY.</h2>
+        <h2 className="runway-title mt-4 font-heading text-[clamp(2.3rem,6vw,5rem)] leading-[0.9] tracking-[-0.04em]">GROWTH RUNWAY.</h2>
 
         <div className="runway-divider mt-11 h-px bg-border md:mt-12" />
 
@@ -28,7 +28,7 @@ export function MarketivRunwaySection() {
           {RUNWAY_STEPS.map((step, index) => (
             <article
               key={step.number}
-              className={`runway-card relative min-h-[352px] px-4 py-9 md:min-h-[388px] md:px-8 md:py-11 ${
+              className={`runway-card relative min-h-[320px] px-4 py-8 md:min-h-[350px] md:px-7 md:py-10 ${
                 index < RUNWAY_STEPS.length - 1 ? "lg:border-r lg:border-border" : ""
               } ${index % 2 === 0 ? "md:border-r md:border-border lg:border-r" : ""}`}
             >

@@ -22,12 +22,12 @@ export function MarketivFooterSection() {
   );
 
   return (
-    <footer ref={sectionRef} className="border-y border-border bg-background text-foreground">
-      <div className="mx-auto w-full max-w-[1400px] px-5 pt-1 md:px-10">
+    <footer ref={sectionRef} className="overflow-x-clip border-y border-border bg-background text-foreground">
+      <div className="mx-auto w-full max-w-[1320px] px-5 pt-1 md:px-10">
         <div className="footer-top-line h-1 bg-foreground" />
 
-        <div className="py-12 md:py-16">
-          <h2 className="overflow-hidden font-heading text-[clamp(3.1rem,9vw,9.4rem)] leading-[0.84] tracking-[-0.045em]">
+        <div className="py-11 md:py-14">
+          <h2 className="overflow-hidden font-heading text-[clamp(2.7rem,7.4vw,7.8rem)] leading-[0.84] tracking-[-0.045em]">
             <span className="footer-title-line block">AKSELERASI</span>
             <span className="footer-title-line block">PERTUMBUHAN.</span>
           </h2>
@@ -35,7 +35,7 @@ export function MarketivFooterSection() {
           <div className="mt-7 flex flex-wrap items-center gap-3 md:gap-4">
             <Link
               href="/register"
-              className="footer-cta inline-flex h-12 min-w-[170px] items-center justify-center gap-3 border border-foreground bg-foreground px-6 font-label text-[10px] tracking-[0.2em] text-background transition-opacity hover:opacity-90"
+              className="footer-cta inline-flex h-12 min-w-[160px] items-center justify-center gap-3 border border-foreground bg-foreground px-5 font-label text-[10px] tracking-[0.2em] text-background transition-opacity hover:opacity-90"
             >
               MULAI SEBAGAI UMKM
               <span aria-hidden="true">-&gt;</span>
@@ -43,7 +43,7 @@ export function MarketivFooterSection() {
 
             <Link
               href="/dashboard/creator"
-              className="footer-cta inline-flex h-12 min-w-[156px] items-center justify-center border border-border-strong/28 px-6 font-label text-[10px] tracking-[0.2em] transition-colors hover:border-foreground/55"
+              className="footer-cta inline-flex h-12 min-w-[146px] items-center justify-center border border-border-strong/28 px-5 font-label text-[10px] tracking-[0.2em] transition-colors hover:border-foreground/55"
             >
               GABUNG KREATOR
             </Link>
@@ -109,7 +109,7 @@ export function MarketivFooterSection() {
       </div>
 
       <div className="footer-legal border-t border-border">
-        <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-3 px-5 py-5 md:flex-row md:items-center md:justify-between md:px-10">
+        <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-3 px-5 py-5 md:flex-row md:items-center md:justify-between md:px-10">
           <p className="font-label text-[8px] tracking-[0.2em] text-foreground-subtle">© 2026 MARKETIV. ALL RIGHTS RESERVED.</p>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">

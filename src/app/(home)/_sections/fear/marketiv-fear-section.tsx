@@ -17,22 +17,22 @@ export function MarketivFearSection() {
   );
 
   return (
-    <section ref={sectionRef} className="relative bg-background text-foreground">
-      <div className="mx-auto w-full max-w-[1400px] px-5 pb-16 pt-14 md:px-10 md:pb-24 md:pt-20">
+    <section ref={sectionRef} className="relative overflow-x-clip bg-background text-foreground">
+      <div className="mx-auto w-full max-w-[1320px] px-5 pb-14 pt-12 md:px-10 md:pb-20 md:pt-16">
         <p className="fear-label font-label text-[10px] text-foreground-subtle">TANTANGAN UMKM DI PEMASARAN DIGITAL</p>
 
-        <h2 className="mt-5 overflow-hidden font-heading text-[clamp(2.3rem,6.2vw,5.2rem)] leading-[0.93] tracking-[-0.038em]">
+        <h2 className="mt-5 overflow-hidden font-heading text-[clamp(2.1rem,5.5vw,4.6rem)] leading-[0.93] tracking-[-0.038em]">
           <span className="fear-heading-line block">TIGA HAMBATAN</span>
           <span className="fear-heading-line block text-foreground-subtle">YANG MENEKAN ROI</span>
         </h2>
 
         <div className="fear-divider mt-10 h-px bg-border md:mt-12" />
 
-        <div className="grid grid-cols-1 border-b border-border md:grid-cols-3">
+        <div className="grid grid-cols-1 border-b border-border md:grid-cols-3 md:items-start">
           {FEAR_POINTS.map((point, index) => (
             <article
               key={point.number}
-              className={`fear-card relative min-h-[480px] px-1 py-9 md:min-h-[520px] md:px-8 md:py-12 ${
+              className={`fear-card relative px-1 py-8 md:px-7 md:py-10 ${
                 index < FEAR_POINTS.length - 1 ? "md:border-r md:border-border" : ""
               }`}
             >
@@ -51,7 +51,7 @@ export function MarketivFearSection() {
 
                 <p className="mt-7 max-w-[340px] text-body-sm leading-relaxed text-foreground-muted">{point.description}</p>
 
-                <div className="mt-12 h-px max-w-[340px] bg-border" />
+                <div className="mt-10 h-px max-w-[340px] bg-border" />
 
                 <p className="mt-8 font-label text-[10px] text-foreground-subtle">MARKETIV MENUTUP CELAH INI</p>
               </div>

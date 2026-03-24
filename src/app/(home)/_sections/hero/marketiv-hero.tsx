@@ -18,10 +18,13 @@ export function MarketivHero() {
   );
 
   return (
-    <section ref={rootRef} className="relative min-h-screen overflow-hidden border border-border bg-background text-foreground">
+    <section
+      ref={rootRef}
+      className="relative min-h-screen overflow-hidden border border-border bg-background text-foreground lg:h-[100svh] lg:max-h-[100svh]"
+    >
       <Image
-        src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1800&q=80"
-        alt="Fashion-style grayscale backdrop"
+        src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=2000"
+        alt="Pelaku UMKM lokal menyiapkan produk usaha rumahan"
         fill
         priority
         sizes="100vw"
@@ -59,12 +62,12 @@ export function MarketivHero() {
         </div>
       </header>
 
-      <div className="relative z-20 mx-auto grid min-h-screen w-full max-w-[1400px] grid-cols-1 px-5 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32 lg:grid-cols-[1fr_auto] lg:pr-14 xl:pr-20">
-        <div className="flex flex-col justify-between">
-          <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">GROWTH REPORT - INDONESIA 2026</div>
+      <div className="relative z-20 mx-auto grid min-h-screen w-full max-w-[1320px] grid-cols-1 px-5 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32 lg:h-[100svh] lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-6 lg:pr-10 lg:pt-30 lg:pb-10 xl:grid-cols-[minmax(0,1fr)_390px] xl:pr-14">
+        <div className="relative z-30 flex flex-col justify-between">
+          <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">HYBRID MARKETPLACE UMKM & KREATOR</div>
 
-          <div className="hero-title-wrap max-w-[980px]">
-            <h1 className="overflow-hidden font-heading text-[clamp(2.4rem,10.2vw,8.9rem)] font-bold leading-[0.9] tracking-[-0.04em] text-foreground">
+          <div className="hero-title-wrap max-w-[980px] lg:max-w-[760px] xl:max-w-[780px]">
+            <h1 className="overflow-hidden font-heading text-[clamp(2.2rem,8.4vw,7rem)] font-bold leading-[0.9] tracking-[-0.04em] text-foreground xl:text-[clamp(2.4rem,7.2vw,7.8rem)]">
               <span className="hero-title-line block">UMKM TUMBUH</span>
               <span className="hero-title-line block">LEWAT KREATOR</span>
               <span className="hero-title-line block">TERVERIFIKASI.</span>
@@ -87,15 +90,15 @@ export function MarketivHero() {
           </div>
         </div>
 
-        <div className="pointer-events-none relative mt-7 h-[350px] w-full max-w-[340px] justify-self-center md:h-[430px] md:max-w-[390px] lg:mt-0 lg:h-auto lg:w-[420px] lg:max-w-none lg:justify-self-end lg:mr-8 xl:mr-12">
-          <article className="hero-card pointer-events-auto absolute -bottom-2 -left-4 w-[58%] border border-border-strong bg-background shadow-[0_22px_60px_rgba(0,0,0,0.22)] md:-left-9 lg:-left-[210px] lg:bottom-5">
+        <div className="pointer-events-none relative z-10 mt-7 h-[350px] w-full max-w-[340px] justify-self-center md:h-[430px] md:max-w-[390px] lg:mt-8 lg:h-[460px] lg:w-full lg:max-w-none lg:justify-self-end xl:h-[500px]">
+          <article className="hero-card group pointer-events-auto absolute bottom-0 left-0 z-20 w-[58%] border border-border-strong bg-background shadow-[0_22px_60px_rgba(0,0,0,0.22)] md:left-2 lg:left-0">
             <div className="relative aspect-[4/5] w-full">
               <Image
                 src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="UMKM storefront owner"
                 fill
                 sizes="(max-width: 768px) 40vw, 22vw"
-                className="object-cover grayscale"
+                className="object-cover grayscale transition-[filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:grayscale-0"
               />
             </div>
             <div className="space-y-1 border-t border-border px-3 py-2 md:px-4 md:py-3">
@@ -104,14 +107,14 @@ export function MarketivHero() {
             </div>
           </article>
 
-          <article className="hero-card pointer-events-auto absolute -top-1 right-2 w-[62%] border border-border-strong bg-background shadow-[0_26px_70px_rgba(0,0,0,0.24)] md:-top-8 md:right-3 lg:right-4 lg:top-4">
+          <article className="hero-card group pointer-events-auto absolute right-0 top-0 z-10 w-[62%] border border-border-strong bg-background shadow-[0_26px_70px_rgba(0,0,0,0.24)] md:right-2 lg:right-0 lg:top-0">
             <div className="relative aspect-[4/5] w-full">
               <Image
                 src="https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Content creator profile"
                 fill
                 sizes="(max-width: 768px) 44vw, 24vw"
-                className="object-cover grayscale"
+                className="object-cover grayscale transition-[filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:grayscale-0"
               />
             </div>
             <div className="space-y-1 border-t border-border px-3 py-2 md:px-4 md:py-3">
