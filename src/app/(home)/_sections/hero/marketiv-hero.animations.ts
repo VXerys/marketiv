@@ -40,7 +40,7 @@ export function animateHeroSection(section: HTMLElement | null): void {
     .to(
       ".hero-navbar-bg",
       {
-        autoAlpha: 1,
+        autoAlpha: 0.96,
         duration: 0.3,
       },
       0

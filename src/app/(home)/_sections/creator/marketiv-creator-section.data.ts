@@ -12,27 +12,27 @@ export interface CreatorMetric {
 export const CREATOR_FEATURES: CreatorFeature[] = [
   {
     id: "01",
-    title: "PERFORMA YANG TERUKUR",
+    title: "PERFORMA REAL-TIME",
     description:
-      "Setiap konten ditrack secara real-time. UMKM melihat performa aktual, kreator mendapat feedback yang jelas.",
+      "Pantau views tervalidasi, engagement, dan progres campaign dalam satu dashboard yang mudah dibaca.",
   },
   {
     id: "02",
-    title: "KONTROL BRIEF YANG JELAS",
+    title: "BRIEF SIAP EKSEKUSI",
     description:
-      "Template brief membuat ekspektasi sinkron dari awal. Revisi lebih sedikit, hasil konten lebih tepat sasaran.",
+      "Template brief berbasis AI menyelaraskan ekspektasi sejak awal, memangkas revisi, dan mempercepat produksi konten.",
   },
   {
     id: "03",
-    title: "EKOSISTEM KAMPANYE BERULANG",
+    title: "PENDAPATAN BERULANG",
     description:
-      "Bukan transaksi sekali jalan. Kreator yang konsisten dapat repeat campaign dan pendapatan yang stabil.",
+      "Kreator dengan performa konsisten diprioritaskan untuk repeat campaign sehingga pendapatan bulanan lebih stabil.",
   },
 ];
 
 export const CREATOR_METRICS: CreatorMetric[] = [
   { label: "Views tervalidasi", value: "2.8M+" },
-  { label: "CPV rata-rata", value: "Rp48" },
-  { label: "Kampanye aktif", value: "124" },
-  { label: "Kreator bergabung", value: "4.3K" },
+  { label: "Biaya per views", value: "Rp48" },
+  { label: "Campaign berjalan", value: "124" },
+  { label: "Kreator aktif", value: "4.3K" },
 ];

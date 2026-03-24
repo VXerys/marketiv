@@ -48,17 +48,17 @@ export const ESCROW_ROWS: EscrowRow[] = [
 export const UMKM_FEATURES: UmkmFeature[] = [
   {
     label: "KEAMANAN",
-    title: "SISTEM ESCROW",
-    description: "Dana terlindungi sampai kampanye selesai dan terverifikasi. Zero fraud.",
+    title: "ESCROW TERPROTEKSI",
+    description: "Anggaran kampanye ditahan aman sampai hasil tervalidasi, sehingga risiko fraud dapat ditekan signifikan.",
   },
   {
     label: "KECERDASAN",
-    title: "AI BRIEF GEN",
-    description: "Deskripsikan produkmu, AI susun brief kreatif siap pakai.",
+    title: "AI BRIEF GENERATOR",
+    description: "Cukup masukkan detail produk, AI menyusun brief kreatif lengkap dalam hitungan detik.",
   },
   {
     label: "TRANSPARANSI",
     title: "RATE CARD LIVE",
-    description: "Harga transparan per views. Tidak ada biaya tersembunyi.",
+    description: "Biaya promosi dihitung per views tervalidasi dengan dashboard transparan untuk evaluasi ROI.",
   },
 ];

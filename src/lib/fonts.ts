@@ -1,8 +1,20 @@
-import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
+import { Inter, Space_Grotesk } from "next/font/google";
 
-export const playfairDisplay = Playfair_Display({
+export const playfairDisplay = localFont({
   variable: "--font-playfair",
-  subsets: ["latin"],
+  src: [
+    {
+      path: "../assets/fonts/playfair/PlayfairDisplay-VariableFont_wght.ttf",
+      style: "normal",
+      weight: "400 900",
+    },
+    {
+      path: "../assets/fonts/playfair/PlayfairDisplay-Italic-VariableFont_wght.ttf",
+      style: "italic",
+      weight: "400 900",
+    },
+  ],
   display: "swap",
 });
 

@@ -9,19 +9,19 @@ export interface CommitmentItem {
 }
 
 export const PLATFORM_LINKS: FooterLinkItem[] = [
-  { label: "Untuk Kreator", href: "/dashboard/creator" },
-  { label: "Untuk UMKM", href: "/dashboard/umkm" },
-  { label: "Campaign Aktif", href: "/marketplace" },
-  { label: "Rate Card", href: "/marketplace" },
-  { label: "Escrow", href: "/marketplace" },
+  { label: "Dashboard Kreator", href: "/dashboard/creator" },
+  { label: "Dashboard UMKM", href: "/dashboard/umkm" },
+  { label: "Marketplace Campaign", href: "/marketplace" },
+  { label: "Harga Berbasis Views", href: "/marketplace" },
+  { label: "Proteksi Escrow", href: "/marketplace" },
 ];
 
 export const COMPANY_LINKS: FooterLinkItem[] = [
-  { label: "Tentang Kami", href: "/about" },
-  { label: "Blog", href: "/marketplace" },
-  { label: "Karir", href: "/marketplace" },
-  { label: "Press Kit", href: "/marketplace" },
-  { label: "Kontak", href: "/contact" },
+  { label: "Tentang Marketiv", href: "/about" },
+  { label: "Wawasan Marketing", href: "/marketplace" },
+  { label: "Kemitraan", href: "/marketplace" },
+  { label: "Media Kit", href: "/marketplace" },
+  { label: "Hubungi Tim", href: "/contact" },
 ];
 
 export const LEGAL_LINKS: FooterLinkItem[] = [
@@ -32,11 +32,11 @@ export const LEGAL_LINKS: FooterLinkItem[] = [
 
 export const COMMITMENTS: CommitmentItem[] = [
   {
-    title: "SDG 8 - PEKERJAAN LAYAK",
-    description: "Mendukung pertumbuhan ekonomi inklusif UMKM.",
+    title: "EKONOMI UMKM BERKELANJUTAN",
+    description: "Mendorong pertumbuhan penjualan UMKM melalui akses campaign yang terukur dan aman.",
   },
   {
-    title: "SDG 9 - INOVASI INDUSTRI",
-    description: "Infrastruktur digital untuk kreator lokal.",
+    title: "KARIER KREATOR BERKEMBANG",
+    description: "Membuka peluang pendapatan berulang bagi kreator mikro lewat kolaborasi yang transparan.",
   },
 ];

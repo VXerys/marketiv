@@ -18,9 +18,9 @@ export function MarketivRunwaySection() {
   return (
     <section ref={sectionRef} className="border-y border-border bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1400px] px-5 pt-14 md:px-10 md:pt-20">
-        <p className="runway-eyebrow font-label text-[10px] tracking-[0.26em] text-foreground-subtle">CARA KERJA - 4 LANGKAH</p>
+        <p className="runway-eyebrow font-label text-[10px] tracking-[0.26em] text-foreground-subtle">ALUR EKSEKUSI - 4 TAHAP CEPAT</p>
 
-        <h2 className="runway-title mt-4 font-heading text-[clamp(2.65rem,7vw,5.8rem)] leading-[0.9] tracking-[-0.04em]">THE RUNWAY.</h2>
+        <h2 className="runway-title mt-4 font-heading text-[clamp(2.65rem,7vw,5.8rem)] leading-[0.9] tracking-[-0.04em]">GROWTH RUNWAY.</h2>
 
         <div className="runway-divider mt-11 h-px bg-border md:mt-12" />
 

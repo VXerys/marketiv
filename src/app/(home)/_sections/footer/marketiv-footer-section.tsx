@@ -28,8 +28,8 @@ export function MarketivFooterSection() {
 
         <div className="py-12 md:py-16">
           <h2 className="overflow-hidden font-heading text-[clamp(3.1rem,9vw,9.4rem)] leading-[0.84] tracking-[-0.045em]">
-            <span className="footer-title-line block">CIPTAKAN</span>
-            <span className="footer-title-line block">DAMPAK.</span>
+            <span className="footer-title-line block">AKSELERASI</span>
+            <span className="footer-title-line block">PERTUMBUHAN.</span>
           </h2>
 
           <div className="mt-7 flex flex-wrap items-center gap-3 md:gap-4">
@@ -37,15 +37,15 @@ export function MarketivFooterSection() {
               href="/register"
               className="footer-cta inline-flex h-12 min-w-[170px] items-center justify-center gap-3 border border-foreground bg-foreground px-6 font-label text-[10px] tracking-[0.2em] text-background transition-opacity hover:opacity-90"
             >
-              MULAI GRATIS
+              MULAI SEBAGAI UMKM
               <span aria-hidden="true">-&gt;</span>
             </Link>
 
             <Link
-              href="/contact"
+              href="/dashboard/creator"
               className="footer-cta inline-flex h-12 min-w-[156px] items-center justify-center border border-border-strong/28 px-6 font-label text-[10px] tracking-[0.2em] transition-colors hover:border-foreground/55"
             >
-              HUBUNGI KAMI
+              GABUNG KREATOR
             </Link>
           </div>
         </div>
@@ -56,7 +56,7 @@ export function MarketivFooterSection() {
           <div className="footer-column">
             <h3 className="font-heading text-[clamp(1.9rem,2.4vw,2.5rem)] leading-none tracking-[-0.025em]">MARKETIV</h3>
             <p className="mt-5 max-w-[250px] text-body-sm leading-relaxed text-foreground-muted">
-              Hybrid marketplace menghubungkan UMKM lokal dengan micro-creator Indonesia.
+              Marketplace pertumbuhan UMKM yang menghubungkan brand lokal dengan kreator mikro terverifikasi lewat workflow campaign berbasis data.
             </p>
           </div>
 
@@ -87,7 +87,7 @@ export function MarketivFooterSection() {
           </div>
 
           <div className="footer-column">
-            <p className="font-label text-[9px] tracking-[0.22em] text-foreground-subtle">KOMITMEN</p>
+            <p className="font-label text-[9px] tracking-[0.22em] text-foreground-subtle">DAMPAK</p>
 
             <div className="mt-5 space-y-3">
               {COMMITMENTS.map((item) => (
@@ -102,7 +102,7 @@ export function MarketivFooterSection() {
               type="button"
               className="mt-3 inline-flex h-8 w-full items-center justify-start border border-foreground bg-foreground px-3 font-label text-[9px] tracking-[0.2em] text-background transition-opacity hover:opacity-90"
             >
-              MENDUKUNG ASTA CITA
+              MENDUKUNG EKONOMI KREATOR
             </button>
           </div>
         </div>

@@ -21,16 +21,16 @@ export function MarketivCreatorSection() {
       <div className="mx-auto w-full max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-0">
           <div className="flex h-full flex-col border border-background/20 bg-foreground px-5 py-8 md:px-9 md:py-12">
-            <p className="creator-eyebrow font-label text-[10px] tracking-[0.26em] text-background/65">EDITION 1 OF 2</p>
+            <p className="creator-eyebrow font-label text-[10px] tracking-[0.26em] text-background/65">SISI KREATOR - EDISI 1/2</p>
 
             <h2 className="mt-5 overflow-hidden font-heading text-[clamp(2.3rem,5.4vw,4.9rem)] leading-[0.9] tracking-[-0.038em]">
-              <span className="creator-title-line block">EDITION 1:</span>
-              <span className="creator-title-line block text-background/82">KREATOR</span>
+              <span className="creator-title-line block">EDISI 1:</span>
+              <span className="creator-title-line block text-background/82">KREATOR MIKRO</span>
             </h2>
 
             <p className="creator-intro mt-6 max-w-[540px] text-body-sm leading-relaxed text-background/72">
-              Marketiv menyiapkan alur kerja yang rapi untuk kreator mikro: brief lebih jelas, target lebih terukur, dan peluang
-              kerja sama berulang yang lebih sehat.
+              Tingkatkan pendapatan dengan brief siap eksekusi, metrik performa real-time, dan peluang campaign berulang dari brand
+              UMKM aktif.
             </p>
 
             <div className="mt-9 divide-y divide-background/20 border-y border-background/20">
@@ -47,7 +47,7 @@ export function MarketivCreatorSection() {
               href="/dashboard/creator"
               className="creator-cta mt-8 inline-flex w-full items-center justify-between border border-background/30 px-4 py-3 font-label text-[10px] tracking-[0.2em] transition-colors hover:bg-background hover:text-foreground md:max-w-[360px]"
             >
-              JADI KREATOR MARKETIV
+              MASUK KE DASHBOARD KREATOR
               <span aria-hidden="true">-&gt;</span>
             </a>
           </div>

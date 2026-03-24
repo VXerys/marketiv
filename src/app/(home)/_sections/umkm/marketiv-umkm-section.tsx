@@ -22,7 +22,7 @@ export function MarketivUmkmSection() {
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-0">
           <div className="border border-border bg-background px-4 py-8 md:px-8 md:py-12 lg:border-r-0">
             <p className="umkm-table-eyebrow font-label text-[10px] tracking-[0.26em] text-foreground-subtle">
-              ESCROW DASHBOARD - REAL-TIME
+              ESCROW ANALYTICS - LIVE CAMPAIGN STATUS
             </p>
 
             <div className="umkm-table-shell mt-5 overflow-x-auto border border-border">
@@ -61,18 +61,18 @@ export function MarketivUmkmSection() {
 
                 <div>
                   <p className="font-label text-[9px] tracking-[0.2em] text-foreground-subtle">AI BRIEF GENERATOR</p>
-                  <p className="mt-1 text-body-sm text-foreground-muted">Naskah siap dalam &lt; 30 detik. Dikurasi AI.</p>
+                  <p className="mt-1 text-body-sm text-foreground-muted">Brief campaign siap pakai dalam kurang dari 30 detik dengan arahan AI.</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="border border-border bg-background px-5 py-8 md:px-9 md:py-12 lg:border-l-0">
-            <p className="umkm-edition-eyebrow font-label text-[10px] tracking-[0.26em] text-foreground-subtle">EDITION 2 OF 2</p>
+            <p className="umkm-edition-eyebrow font-label text-[10px] tracking-[0.26em] text-foreground-subtle">SISI UMKM - EDISI 2/2</p>
 
             <h2 className="mt-5 overflow-hidden font-heading text-[clamp(2.35rem,5.6vw,5.15rem)] leading-[0.9] tracking-[-0.04em] text-foreground">
-              <span className="umkm-title-line block">EDITION 2:</span>
-              <span className="umkm-title-line block text-foreground-subtle">UMKM</span>
+              <span className="umkm-title-line block">EDISI 2:</span>
+              <span className="umkm-title-line block text-foreground-subtle">UMKM BERTUMBUH</span>
             </h2>
 
             <div className="mt-8 divide-y divide-border border-t border-border">
@@ -89,7 +89,7 @@ export function MarketivUmkmSection() {
               href="/login"
               className="umkm-cta mt-9 inline-flex w-full items-center justify-center gap-3 border border-foreground bg-foreground px-5 py-3 font-label text-[10px] tracking-[0.2em] text-background transition-opacity hover:opacity-90 md:w-[210px]"
             >
-              DAFTARKAN UMKM
+              MULAI CAMPAIGN UMKM
               <span aria-hidden="true">-&gt;</span>
             </a>
           </div>

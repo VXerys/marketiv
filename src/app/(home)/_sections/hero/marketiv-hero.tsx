@@ -30,8 +30,8 @@ export function MarketivHero() {
       <div className="absolute inset-0 bg-background/84" />
 
       <header className="hero-navbar fixed inset-x-0 top-0 z-50">
-        <div className="hero-navbar-bg pointer-events-none absolute inset-0 opacity-0 bg-background/55 backdrop-blur-[7px]" />
-        <div className="hero-navbar-divider pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border opacity-0" />
+        <div className="hero-navbar-bg pointer-events-none absolute inset-0 opacity-0 bg-background/88 backdrop-blur-[6px]" />
+        <div className="hero-navbar-divider pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border/75 opacity-100" />
 
         <div className="relative z-10 flex w-full items-center justify-between px-6 py-4 md:px-12">
           <span className="hero-nav-item font-heading text-4xl leading-none tracking-tight">MARKETIV</span>
@@ -54,23 +54,23 @@ export function MarketivHero() {
             href="/login"
             className="hero-nav-item font-label border-brutal bg-accent px-5 py-2 text-xs text-accent-foreground transition-opacity hover:opacity-90"
           >
-            Masuk
+            Masuk Dashboard
           </Link>
         </div>
       </header>
 
       <div className="relative z-20 mx-auto grid min-h-screen w-full max-w-[1400px] grid-cols-1 px-5 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32 lg:grid-cols-[1fr_auto] lg:pr-14 xl:pr-20">
         <div className="flex flex-col justify-between">
-          <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">SEASON 01 - INDONESIA 2026</div>
+          <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">GROWTH REPORT - INDONESIA 2026</div>
 
           <div className="hero-title-wrap max-w-[980px]">
             <h1 className="overflow-hidden font-heading text-[clamp(2.4rem,10.2vw,8.9rem)] font-bold leading-[0.9] tracking-[-0.04em] text-foreground">
-              <span className="hero-title-line block">MENDEMOKRATISASI</span>
-              <span className="hero-title-line block">PEMASARAN</span>
-              <span className="hero-title-line block">DIGITAL.</span>
+              <span className="hero-title-line block">UMKM TUMBUH</span>
+              <span className="hero-title-line block">LEWAT KREATOR</span>
+              <span className="hero-title-line block">TERVERIFIKASI.</span>
             </h1>
             <p className="mt-3 max-w-xl text-body-sm text-foreground-muted md:mt-5">
-              Marketiv membangun ekosistem adil antara UMKM dan kreator mikro.
+              Jalankan kampanye lebih cepat dengan AI brief generator, proteksi escrow, dan pembayaran hanya untuk views yang tervalidasi.
             </p>
           </div>
 
@@ -79,10 +79,10 @@ export function MarketivHero() {
               href="/register"
               className="hero-cta font-label border-brutal bg-accent px-8 py-3 text-xs text-accent-foreground transition-opacity hover:opacity-90"
             >
-              Mulai Sekarang
+              Luncurkan Campaign
             </Link>
             <Link href="/marketplace" className="hero-cta font-label text-xs text-foreground-subtle underline-offset-4 hover:underline">
-              Pelajari
+              Jelajahi Marketplace
             </Link>
           </div>
         </div>
@@ -99,8 +99,8 @@ export function MarketivHero() {
               />
             </div>
             <div className="space-y-1 border-t border-border px-3 py-2 md:px-4 md:py-3">
-              <p className="font-label text-[10px] text-foreground-subtle">EKOSISTEM A</p>
-              <p className="font-label text-xs text-foreground">UMKM STOREFRONT</p>
+              <p className="font-label text-[10px] text-foreground-subtle">SISI UMKM</p>
+              <p className="font-label text-xs text-foreground">KONTROL ANGGARAN</p>
             </div>
           </article>
 
@@ -115,8 +115,8 @@ export function MarketivHero() {
               />
             </div>
             <div className="space-y-1 border-t border-border px-3 py-2 md:px-4 md:py-3">
-              <p className="font-label text-[10px] text-foreground-subtle">EKOSISTEM B</p>
-              <p className="font-label text-xs text-foreground">CREATOR ANALYTICS</p>
+              <p className="font-label text-[10px] text-foreground-subtle">SISI KREATOR</p>
+              <p className="font-label text-xs text-foreground">PERFORMA REAL-TIME</p>
             </div>
           </article>
         </div>

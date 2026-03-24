@@ -11,26 +11,26 @@ export interface FearPoint {
 export const FEAR_POINTS: FearPoint[] = [
   {
     number: "01",
-    label: "SISTEM RATE CARD KONVENSIONAL",
-    title: "RISIKO FINANSIAL",
+    label: "BAYAR DI MUKA TANPA PROTEKSI",
+    title: "ANGGARAN MUDAH BOCOR",
     description:
-      "Bayar di muka tanpa jaminan. Kreator belum posting, budget sudah ludes. Model lama tidak punya safeguard.",
+      "Biaya promosi keluar sebelum hasil terlihat. Saat deliverable tertunda, arus kas UMKM langsung tertekan tanpa perlindungan transaksi.",
     icon: "financial",
   },
   {
     number: "02",
-    label: "MANIPULASI BOT & VIEWS PALSU",
-    title: "KUALITAS RENDAH",
+    label: "ENGAGEMENT PALSU & BOT",
+    title: "DATA KINERJA MENYESATKAN",
     description:
-      "Metrik terlihat besar, konversi nol. Bot memenuhi laporan engagement. UMKM tidak punya cara verifikasi.",
+      "Views terlihat tinggi, tetapi konversi stagnan. Tanpa verifikasi performa yang valid, keputusan marketing jadi salah arah.",
     icon: "quality",
   },
   {
     number: "03",
-    label: "KESULITAN MENYUSUN BRIEF",
-    title: "LITERASI DIGITAL",
+    label: "BRIEF MANUAL TIDAK TERARAH",
+    title: "KONTEN SERING MELENCENG",
     description:
-      "UMKM tidak tahu cara komunikasi kreatif. Brief buruk menghasilkan konten buruk. Lingkaran setan.",
+      "Instruksi campaign yang tidak presisi memicu revisi berulang. Waktu produksi habis, momentum penjualan ikut hilang.",
     icon: "literacy",
   },
 ];

@@ -68,6 +68,22 @@
   --highlight: 0 0% 80%;
 }
 
+/* Landing page override: keep home route bright even when global theme is dark. */
+.landing-light {
+  --background: 0 0% 96%;
+  --surface: 0 0% 92%;
+  --surface-alt: 0 0% 88%;
+  --foreground: 0 0% 8%;
+  --foreground-muted: 0 0% 33%;
+  --foreground-subtle: 0 0% 52%;
+  --accent: 0 0% 8%;
+  --accent-foreground: 0 0% 100%;
+  --border: 0 0% 80%;
+  --border-strong: 0 0% 8%;
+  --ring: 0 0% 8%;
+  --highlight: 0 0% 22%;
+}
+
 /* ============================================
    Tailwind v4 Theme — Token Registration
    ============================================ */
