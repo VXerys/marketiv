@@ -36,8 +36,8 @@ export function MarketivHero() {
         <div className="hero-navbar-bg pointer-events-none absolute inset-0 opacity-0 bg-background/88 backdrop-blur-[6px]" />
         <div className="hero-navbar-divider pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border/75 opacity-100" />
 
-        <div className="relative z-10 flex w-full items-center justify-between px-6 py-4 md:px-12">
-          <span className="hero-nav-item font-heading text-4xl leading-none tracking-tight">MARKETIV</span>
+        <div className="relative z-10 flex w-full items-center justify-between gap-3 px-4 py-4 md:px-12">
+          <span className="hero-nav-item font-heading text-[2rem] leading-none tracking-tight md:text-4xl">MARKETIV</span>
 
           <div className="pointer-events-none absolute inset-0 hidden items-center justify-center md:flex">
             <nav className="pointer-events-auto flex items-center gap-10">
@@ -55,7 +55,7 @@ export function MarketivHero() {
 
           <Link
             href="/login"
-            className="hero-nav-item font-label border-brutal bg-accent px-5 py-2 text-xs text-accent-foreground transition-opacity hover:opacity-90"
+            className="hero-nav-item inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap border-brutal bg-accent px-3 py-2 font-label text-[10px] tracking-[0.14em] text-accent-foreground transition-[opacity,transform] duration-300 ease-quart-out hover:opacity-90 motion-safe:hover:-translate-y-0.5 sm:px-5 sm:text-xs sm:tracking-[0.18em]"
           >
             Pilih Role Login
           </Link>
@@ -77,14 +77,17 @@ export function MarketivHero() {
             </p>
           </div>
 
-          <div className="mt-7 flex flex-wrap items-center justify-start gap-5 md:mt-10 md:justify-end">
+          <div className="mt-7 flex flex-col items-stretch justify-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5 md:mt-10 md:justify-end">
             <Link
               href="/register/umkm"
-              className="hero-cta font-label border-brutal bg-accent px-8 py-3 text-xs text-accent-foreground transition-opacity hover:opacity-90"
+              className="hero-cta inline-flex min-h-11 w-full items-center justify-center border-brutal bg-accent px-8 py-3 text-center font-label text-xs text-accent-foreground transition-[opacity,transform] duration-300 ease-quart-out hover:opacity-90 motion-safe:hover:-translate-y-0.5 sm:w-auto"
             >
               Luncurkan Campaign
             </Link>
-            <Link href="/marketplace" className="hero-cta font-label text-xs text-foreground-subtle underline-offset-4 hover:underline">
+            <Link
+              href="/marketplace"
+              className="hero-cta inline-flex min-h-11 w-full items-center justify-center border border-border-strong/45 bg-background/90 px-6 py-3 text-center font-label text-xs tracking-[0.16em] text-foreground transition-[transform,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-foreground/65 motion-safe:hover:bg-surface sm:w-auto"
+            >
               Jelajahi Marketplace
             </Link>
           </div>
