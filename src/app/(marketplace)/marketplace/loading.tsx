@@ -6,7 +6,7 @@ export default function MarketplaceLoading() {
           <div className="h-3 w-40 bg-border" />
           <div className="mt-4 h-10 w-full max-w-[720px] bg-border" />
           <div className="mt-4 h-4 w-full max-w-[840px] bg-border" />
-          <div className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={index} className="border border-border bg-background">
                 <div className="aspect-[3/4] bg-border" />

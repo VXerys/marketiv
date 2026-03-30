@@ -54,8 +54,6 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
-  const [isCategoryDesktopOpen, setIsCategoryDesktopOpen] = useState(false);
-  const [isCategoryMobileOpen, setIsCategoryMobileOpen] = useState(false);
 
   const deferredSearch = useDeferredValue(search);
   const normalizedSearch = useMemo(() => normalizeSearch(deferredSearch), [deferredSearch]);
@@ -146,160 +144,94 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
             Satu marketplace untuk dua mode kolaborasi. Campaign mode fokus target views terverifikasi, sedangkan Rate Card mode
             fokus negosiasi paket kreator dengan escrow.
           </p>
-
-            <div className="mp-controls mt-5 flex flex-col gap-3 border-t border-border pt-4 md:mt-6 md:gap-3 md:pt-5">
-              <div className="grid gap-2 md:grid-cols-[auto_minmax(0,1fr)_auto_auto] md:items-center">
-              <div className="inline-flex border border-border">
-                <button
-                  type="button"
-                  onClick={() => setActiveMode("campaign")}
-                  className={`min-h-10 px-3 font-label text-[10px] tracking-[0.18em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                    activeMode === "campaign"
-                      ? "border-r border-foreground bg-foreground text-background"
-                      : "bg-background/92 text-foreground hover:bg-surface"
-                  }`}
-                  aria-pressed={activeMode === "campaign"}
-                >
-                  CAMPAIGN UMKM
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveMode("rate_card")}
-                  className={`min-h-10 border-l border-border px-3 font-label text-[10px] tracking-[0.18em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
-                    activeMode === "rate_card"
-                      ? "border-l-foreground bg-foreground text-background"
-                      : "bg-background/92 text-foreground hover:bg-surface"
-                  }`}
-                  aria-pressed={activeMode === "rate_card"}
-                >
-                  RATE CARD CREATOR
-                </button>
-              </div>
-
-              <label className="flex min-h-10 items-center border border-border-strong/35 bg-background/88 px-3">
-                <span className="sr-only">Cari campaign atau kreator</span>
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Cari judul, deskripsi, kreator, atau brand"
-                  className="w-full bg-transparent text-[13px] text-foreground placeholder:text-foreground-muted focus:outline-none"
-                />
-              </label>
-
-              <select
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value as SortOption)}
-                className="min-h-10 border border-border-strong/40 bg-background/95 px-3 font-label text-[10px] tracking-[0.16em] text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {MARKETPLACE_SORT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                type="button"
-                onClick={() => setIsCategoryDesktopOpen((value) => !value)}
-                className="hidden min-h-10 items-center justify-center border border-border-strong/40 bg-background/95 px-3 font-label text-[10px] tracking-[0.18em] transition-[opacity,transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 hover:border-foreground/65 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:inline-flex"
-              >
-                {isCategoryDesktopOpen ? "SEMBUNYIKAN" : "KATEGORI"}
-              </button>
-            </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/70 pt-3">
-                <div className="flex items-center gap-2">
-                  <p className="font-label text-[10px] tracking-[0.16em] text-foreground-muted">
-                    MODE AKTIF: {activeMode === "campaign" ? "CAMPAIGN UMKM" : "RATE CARD CREATOR"}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 md:gap-3">
-                  <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">{filteredListings.length} HASIL</p>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearch("");
-                      setCategory("all");
-                      setSortBy("relevance");
-                    }}
-                    className="inline-flex min-h-10 items-center border border-border-strong/45 bg-background/95 px-3 font-label text-[10px] tracking-[0.18em] transition-[opacity,transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 hover:border-foreground/65 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    RESET FILTER
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-start gap-2 md:hidden">
-                <button
-                  type="button"
-                  onClick={() => setIsCategoryMobileOpen(true)}
-                  className="inline-flex min-h-10 items-center border border-border-strong/45 bg-background/95 px-3 font-label text-[10px] tracking-[0.18em] transition-[opacity,transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 hover:border-foreground/65 hover:bg-surface md:hidden"
-                >
-                  PILIH KATEGORI
-                </button>
-              </div>
-            </div>
           </div>
         </div>
 
-        {isCategoryDesktopOpen ? (
-          <div className="mt-3 hidden border border-border bg-surface px-4 py-4 md:block">
-            <div className="flex flex-wrap gap-2">
-              {["all", ...UMKM_MARKETPLACE_CATEGORIES].map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setCategory(item)}
-                  className={`min-h-10 border px-3 font-label text-[10px] tracking-[0.16em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 ${
-                    category === item
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border-strong/45 bg-background/95 text-foreground hover:border-foreground/65 hover:bg-surface"
-                  }`}
-                >
-                  {item === "all" ? "SEMUA KATEGORI" : item.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {isCategoryMobileOpen ? (
-          <div className="fixed inset-0 z-50 flex min-h-screen flex-col bg-background md:hidden">
-            <div className="flex items-center justify-between border-b border-border px-5 py-4">
-              <p className="font-label text-[11px] tracking-[0.18em]">PILIH KATEGORI UMKM</p>
+        <div className="mp-controls sticky top-0 z-40 mt-3 border border-border bg-background/95 p-3 backdrop-blur md:top-2 md:p-4">
+          <div className="grid gap-2 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center">
+            <div className="inline-flex border border-border">
               <button
                 type="button"
-                onClick={() => setIsCategoryMobileOpen(false)}
-                className="inline-flex min-h-10 items-center border border-border px-3 font-label text-[10px] tracking-[0.18em]"
+                onClick={() => setActiveMode("campaign")}
+                className={`min-h-10 px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[10px] md:tracking-[0.18em] ${
+                  activeMode === "campaign"
+                    ? "border-r border-foreground bg-foreground text-background"
+                    : "bg-background text-foreground hover:bg-surface"
+                }`}
+                aria-pressed={activeMode === "campaign"}
               >
-                TUTUP
+                CAMPAIGN
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveMode("rate_card")}
+                className={`min-h-10 border-l border-border px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[10px] md:tracking-[0.18em] ${
+                  activeMode === "rate_card"
+                    ? "border-l-foreground bg-foreground text-background"
+                    : "bg-background text-foreground hover:bg-surface"
+                }`}
+                aria-pressed={activeMode === "rate_card"}
+              >
+                RATE CARD
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 overflow-y-auto px-5 py-5">
-              {["all", ...UMKM_MARKETPLACE_CATEGORIES].map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    setCategory(item);
-                    setIsCategoryMobileOpen(false);
-                  }}
-                  className={`min-h-11 border px-3 font-label text-[10px] tracking-[0.16em] ${
-                    category === item
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border text-foreground"
-                  }`}
-                >
-                  {item === "all" ? "SEMUA" : item.toUpperCase()}
-                </button>
+            <label className="flex min-h-10 items-center border border-border-strong/35 bg-background px-3">
+              <span className="sr-only">Cari campaign atau kreator</span>
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Cari campaign atau kreator"
+                className="w-full bg-transparent text-[12px] text-foreground placeholder:text-foreground-muted focus:outline-none"
+              />
+            </label>
+
+            <select
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value as SortOption)}
+              className="min-h-10 border border-border-strong/40 bg-background px-2.5 font-label text-[9px] tracking-[0.14em] text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring md:px-3 md:text-[10px] md:tracking-[0.16em]"
+            >
+              {MARKETPLACE_SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
-        ) : null}
+
+          <div className="mt-2 flex items-center justify-between gap-2 border-t border-border/75 pt-2.5">
+            <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">{filteredListings.length} HASIL</p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setCategory("all");
+                setSortBy("relevance");
+              }}
+              className="inline-flex min-h-8 items-center border border-border-strong/45 bg-background px-2.5 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-foreground/65"
+            >
+              RESET
+            </button>
+          </div>
+
+          <div className="no-scrollbar mt-2.5 flex gap-2 overflow-x-auto border-t border-border/75 pt-2.5">
+            {["all", ...UMKM_MARKETPLACE_CATEGORIES].map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setCategory(item)}
+                className={`shrink-0 min-h-9 border px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 md:text-[10px] md:tracking-[0.16em] ${
+                  category === item
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border-strong/45 bg-background text-foreground hover:border-foreground/65 hover:bg-surface"
+                }`}
+              >
+                {item === "all" ? "SEMUA" : item.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {filteredListings.length === 0 ? (
           <div className="mt-6 border border-border bg-surface px-5 py-8 text-center md:mt-8">
@@ -307,7 +239,7 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
             <p className="mt-3 text-body-sm text-foreground-muted">Ubah kata kunci, mode, atau kategori untuk melihat listing lain.</p>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:mt-8 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-2.5 md:mt-8 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
             {filteredListings.map((item) => (
               <MarketplaceCard key={item.id} item={item} />
             ))}

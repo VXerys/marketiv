@@ -129,39 +129,39 @@ export function MarketplaceCard({ item }: MarketplaceCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/45 to-transparent" />
 
         <div className="absolute left-2 right-2 top-2 flex items-center justify-between gap-1.5">
-          <span className="inline-flex min-h-7 max-w-[48%] items-center justify-center truncate border border-border-strong/70 bg-background px-2.5 font-label text-[9px] tracking-[0.12em] text-foreground shadow-[0_1px_0_rgba(0,0,0,0.08)] md:text-[10px] md:tracking-[0.14em]">
+          <span className="inline-flex min-h-6 max-w-[48%] items-center justify-center truncate border border-border-strong/70 bg-background px-2 font-label text-[8px] tracking-[0.11em] text-foreground shadow-[0_1px_0_rgba(0,0,0,0.08)] md:min-h-7 md:px-2.5 md:text-[10px] md:tracking-[0.14em]">
             {modeLabel(item.mode)}
           </span>
-          <span className={`inline-flex min-h-7 max-w-[48%] items-center justify-center truncate border px-2.5 font-label text-[9px] tracking-[0.12em] shadow-[0_1px_0_rgba(0,0,0,0.08)] md:text-[10px] md:tracking-[0.14em] ${statusClassName(item.status)}`}>
+          <span className={`inline-flex min-h-6 max-w-[48%] items-center justify-center truncate border px-2 font-label text-[8px] tracking-[0.11em] shadow-[0_1px_0_rgba(0,0,0,0.08)] md:min-h-7 md:px-2.5 md:text-[10px] md:tracking-[0.14em] ${statusClassName(item.status)}`}>
             {statusLabel(item.status)}
           </span>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col px-4 py-4 md:px-4 md:py-4">
+      <div className="flex flex-1 flex-col px-3 py-3 md:px-4 md:py-4">
         <div className="flex flex-col gap-1 min-[420px]:flex-row min-[420px]:items-start min-[420px]:justify-between min-[420px]:gap-2">
-          <p className="font-label text-[10px] tracking-[0.14em] text-foreground-muted">{item.category}</p>
-          <p className="font-label text-[10px] tracking-[0.14em] text-foreground-muted min-[420px]:text-right">{channelLabel(item.channels)}</p>
+          <p className="font-label text-[9px] tracking-[0.12em] text-foreground-muted md:text-[10px] md:tracking-[0.14em]">{item.category}</p>
+          <p className="font-label text-[9px] tracking-[0.12em] text-foreground-muted min-[420px]:text-right md:text-[10px] md:tracking-[0.14em]">{channelLabel(item.channels)}</p>
         </div>
 
-        <h3 className="mt-2 line-clamp-2 font-heading text-[clamp(1.35rem,4.2vw,1.5rem)] leading-[0.95] tracking-[-0.02em] text-foreground md:text-[clamp(1.05rem,1.45vw,1.35rem)]">
+        <h3 className="mt-1.5 line-clamp-2 font-heading text-[clamp(1.05rem,3.4vw,1.2rem)] leading-[0.95] tracking-[-0.02em] text-foreground md:mt-2 md:text-[clamp(1.05rem,1.45vw,1.35rem)]">
           {item.title}
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-foreground-muted md:line-clamp-3 md:text-[13px]">{item.description}</p>
+        <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-foreground-muted md:mt-2 md:line-clamp-3 md:text-[13px]">{item.description}</p>
 
-        <div className="mt-3 flex flex-col gap-1 border-t border-border pt-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
-          <p className="font-heading text-[1.1rem] leading-none tracking-[-0.02em] text-foreground">{priceLabel}</p>
-          <p className="font-label text-[9px] tracking-[0.16em] text-foreground-subtle">
+        <div className="mt-2.5 flex flex-col gap-1 border-t border-border pt-2.5 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between md:mt-3 md:pt-3">
+          <p className="font-heading text-[1.04rem] leading-none tracking-[-0.02em] text-foreground md:text-[1.1rem]">{priceLabel}</p>
+          <p className="font-label text-[8px] tracking-[0.14em] text-foreground-subtle md:text-[9px] md:tracking-[0.16em]">
             {item.mode === "campaign" ? "EST. BUDGET" : "START FROM"}
           </p>
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2.5 border-t border-border pt-3 text-[12px] text-foreground-muted md:hidden">
+        <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-2 border-t border-border pt-2.5 text-[11px] text-foreground-muted md:hidden">
           {mobileSummaryItems.map((summary) => (
             <div key={summary.label}>
-              <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">{summary.label}</p>
-              <p className="mt-1 truncate text-[12px] text-foreground md:text-[13px]">{summary.value}</p>
+              <p className="font-label text-[8px] tracking-[0.12em] text-foreground-subtle">{summary.label}</p>
+              <p className="mt-1 truncate text-[11px] text-foreground md:text-[13px]">{summary.value}</p>
             </div>
           ))}
         </div>
