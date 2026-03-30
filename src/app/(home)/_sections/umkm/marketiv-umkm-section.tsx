@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
 import { useGSAP } from "@/lib/gsap";
 import { animateUmkmSection } from "./marketiv-umkm-section.animations";
@@ -85,13 +86,13 @@ export function MarketivUmkmSection() {
               ))}
             </div>
 
-            <a
-              href="/login"
-              className="umkm-cta mt-7 inline-flex w-full items-center justify-between border border-foreground bg-foreground px-5 py-3 font-label text-[10px] tracking-[0.2em] text-background transition-opacity hover:opacity-90 md:w-[280px]"
+            <Link
+              href="/panduan/umkm"
+              className="umkm-cta mt-7 inline-flex min-h-11 w-full items-center justify-between border border-foreground bg-foreground px-5 py-3 font-label text-[10px] tracking-[0.2em] text-background transition-[transform,opacity] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:w-[280px]"
             >
-              MULAI CAMPAIGN UMKM
+              LIHAT PANDUAN UMKM
               <span aria-hidden="true">-&gt;</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

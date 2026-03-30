@@ -12,8 +12,12 @@
  */
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+
+const MARKETPLACE_SCROLL_Y_KEY = "marketplace:scrollY";
+const MARKETPLACE_RESTORE_FLAG_KEY = "marketplace:restoreOnBack";
 
 interface SmoothScrollProviderProps {
   children: React.ReactNode;
@@ -21,6 +25,20 @@ interface SmoothScrollProviderProps {
 
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   const lenisRef = useRef<Lenis | null>(null);
+  const isPopNavigationRef = useRef(false);
+  const pathname = usePathname();
+
+  const scrollToPosition = (top: number) => {
+    const lenis = lenisRef.current;
+
+    if (lenis) {
+      lenis.scrollTo(top, { duration: 0, immediate: true });
+    }
+
+    window.scrollTo({ top, left: 0, behavior: "instant" });
+    ScrollTrigger.clearScrollMemory?.();
+    ScrollTrigger.refresh();
+  };
 
   useEffect(() => {
     // Initialize Lenis with Elegant Brutalist feel:
@@ -59,6 +77,53 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
       lenisRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      isPopNavigationRef.current = true;
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const restoreMarketplaceScroll =
+        pathname === "/marketplace" &&
+        isPopNavigationRef.current &&
+        window.sessionStorage.getItem(MARKETPLACE_RESTORE_FLAG_KEY) === "1";
+
+      if (restoreMarketplaceScroll) {
+        const savedYRaw = window.sessionStorage.getItem(MARKETPLACE_SCROLL_Y_KEY);
+        const savedY = savedYRaw ? Number(savedYRaw) : 0;
+        const safeY = Number.isFinite(savedY) && savedY > 0 ? savedY : 0;
+
+        scrollToPosition(safeY);
+        window.sessionStorage.removeItem(MARKETPLACE_RESTORE_FLAG_KEY);
+      } else {
+        scrollToPosition(0);
+      }
+
+      isPopNavigationRef.current = false;
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [pathname]);
 
   return <>{children}</>;
 }

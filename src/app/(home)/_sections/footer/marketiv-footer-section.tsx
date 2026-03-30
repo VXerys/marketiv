@@ -34,7 +34,7 @@ export function MarketivFooterSection() {
 
           <div className="mt-7 flex flex-wrap items-center gap-3 md:gap-4">
             <Link
-              href="/register"
+              href="/register/umkm"
               className="footer-cta inline-flex h-12 min-w-[160px] items-center justify-center gap-3 border border-foreground bg-foreground px-5 font-label text-[10px] tracking-[0.2em] text-background transition-opacity hover:opacity-90"
             >
               MULAI SEBAGAI UMKM
@@ -42,7 +42,7 @@ export function MarketivFooterSection() {
             </Link>
 
             <Link
-              href="/dashboard/creator"
+              href="/register/kreator"
               className="footer-cta inline-flex h-12 min-w-[146px] items-center justify-center border border-border-strong/28 px-5 font-label text-[10px] tracking-[0.2em] transition-colors hover:border-foreground/55"
             >
               GABUNG KREATOR

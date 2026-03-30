@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 import { useGSAP } from "@/lib/gsap";
 import { animateCreatorSection } from "./marketiv-creator-section.animations";
@@ -43,13 +44,13 @@ export function MarketivCreatorSection() {
               ))}
             </div>
 
-            <a
-              href="/dashboard/creator"
-              className="creator-cta mt-7 inline-flex w-full items-center justify-between border border-background/30 px-4 py-3 font-label text-[10px] tracking-[0.2em] transition-colors hover:bg-background hover:text-foreground md:max-w-[360px]"
+            <Link
+              href="/panduan/kreator"
+              className="creator-cta mt-7 inline-flex min-h-11 w-full items-center justify-between border border-background/30 px-4 py-3 font-label text-[10px] tracking-[0.2em] transition-[transform,background-color,color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-background/55 hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-2 focus-visible:ring-offset-foreground md:max-w-[360px]"
             >
-              MASUK KE DASHBOARD KREATOR
+              LIHAT PANDUAN KREATOR
               <span aria-hidden="true">-&gt;</span>
-            </a>
+            </Link>
           </div>
 
           <div className="creator-visual relative border border-background/20 bg-background/5 lg:col-span-7 lg:border-l-0">

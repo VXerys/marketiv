@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { MarketplaceShell } from "@/components/marketplace/marketplace-shell";
+import { getMarketplaceListings } from "./_data/marketplace-listings";
 
 export const metadata: Metadata = buildMetadata({
   title: "Marketplace Campaign",
@@ -15,14 +17,12 @@ export const metadata: Metadata = buildMetadata({
   ],
 });
 
-export default function MarketplacePage() {
+export default async function MarketplacePage() {
+  const listings = await getMarketplaceListings();
+
   return (
-    <main className="min-h-screen bg-background px-6 py-20 text-foreground md:px-12">
-      <h1 className="font-heading text-5xl tracking-tight">Marketplace Campaign Marketiv</h1>
-      <p className="mt-4 max-w-xl text-foreground-muted">
-        Temukan kreator mikro sesuai niche, bandingkan performa terverifikasi, dan pilih campaign dengan kontrol anggaran yang
-        transparan.
-      </p>
+    <main className="min-h-screen bg-background text-foreground">
+      <MarketplaceShell listings={listings} />
     </main>
   );
 }

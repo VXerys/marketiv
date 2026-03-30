@@ -57,7 +57,7 @@ export function MarketivHero() {
             href="/login"
             className="hero-nav-item font-label border-brutal bg-accent px-5 py-2 text-xs text-accent-foreground transition-opacity hover:opacity-90"
           >
-            Masuk Dashboard
+            Pilih Role Login
           </Link>
         </div>
       </header>
@@ -79,7 +79,7 @@ export function MarketivHero() {
 
           <div className="mt-7 flex flex-wrap items-center justify-start gap-5 md:mt-10 md:justify-end">
             <Link
-              href="/register"
+              href="/register/umkm"
               className="hero-cta font-label border-brutal bg-accent px-8 py-3 text-xs text-accent-foreground transition-opacity hover:opacity-90"
             >
               Luncurkan Campaign
