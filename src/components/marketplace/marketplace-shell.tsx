@@ -307,7 +307,7 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
             <p className="mt-3 text-body-sm text-foreground-muted">Ubah kata kunci, mode, atau kategori untuk melihat listing lain.</p>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:mt-8 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
             {filteredListings.map((item) => (
               <MarketplaceCard key={item.id} item={item} />
             ))}

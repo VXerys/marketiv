@@ -104,6 +104,7 @@ export function MarketplaceCard({ item }: MarketplaceCardProps) {
     item.mode === "campaign"
       ? campaignModeSummary(item)
       : rateCardModeSummary(item, ratingLabel);
+  const mobileSummaryItems = summaryItems.slice(0, 2);
 
   const persistMarketplaceScrollPosition = () => {
     if (typeof window === "undefined") {
@@ -122,41 +123,50 @@ export function MarketplaceCard({ item }: MarketplaceCardProps) {
           alt={item.title}
           fill
           className="object-cover grayscale transition-transform duration-500 ease-quart-out motion-safe:group-hover:scale-[1.03]"
-          sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw"
+          sizes="(max-width: 419px) 100vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw"
           priority={false}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/45 to-transparent" />
 
-        <div className="absolute left-2 top-2 flex items-center gap-1.5">
-          <span className="inline-flex min-h-7 items-center border border-border-strong/70 bg-background px-2.5 font-label text-[10px] tracking-[0.14em] text-foreground shadow-[0_1px_0_rgba(0,0,0,0.08)]">
+        <div className="absolute left-2 right-2 top-2 flex items-center justify-between gap-1.5">
+          <span className="inline-flex min-h-7 max-w-[48%] items-center justify-center truncate border border-border-strong/70 bg-background px-2.5 font-label text-[9px] tracking-[0.12em] text-foreground shadow-[0_1px_0_rgba(0,0,0,0.08)] md:text-[10px] md:tracking-[0.14em]">
             {modeLabel(item.mode)}
           </span>
-          <span className={`inline-flex min-h-7 items-center border px-2.5 font-label text-[10px] tracking-[0.14em] shadow-[0_1px_0_rgba(0,0,0,0.08)] ${statusClassName(item.status)}`}>
+          <span className={`inline-flex min-h-7 max-w-[48%] items-center justify-center truncate border px-2.5 font-label text-[9px] tracking-[0.12em] shadow-[0_1px_0_rgba(0,0,0,0.08)] md:text-[10px] md:tracking-[0.14em] ${statusClassName(item.status)}`}>
             {statusLabel(item.status)}
           </span>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col px-3 py-3 md:px-4 md:py-4">
-        <div className="flex items-start justify-between gap-2">
+      <div className="flex flex-1 flex-col px-4 py-4 md:px-4 md:py-4">
+        <div className="flex flex-col gap-1 min-[420px]:flex-row min-[420px]:items-start min-[420px]:justify-between min-[420px]:gap-2">
           <p className="font-label text-[10px] tracking-[0.14em] text-foreground-muted">{item.category}</p>
-          <p className="font-label text-[10px] tracking-[0.14em] text-foreground-muted">{channelLabel(item.channels)}</p>
+          <p className="font-label text-[10px] tracking-[0.14em] text-foreground-muted min-[420px]:text-right">{channelLabel(item.channels)}</p>
         </div>
 
-        <h3 className="mt-2 line-clamp-2 font-heading text-[clamp(1.05rem,1.45vw,1.35rem)] leading-[0.95] tracking-[-0.02em] text-foreground">
+        <h3 className="mt-2 line-clamp-2 font-heading text-[clamp(1.35rem,4.2vw,1.5rem)] leading-[0.95] tracking-[-0.02em] text-foreground md:text-[clamp(1.05rem,1.45vw,1.35rem)]">
           {item.title}
         </h3>
 
-        <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-foreground-muted md:text-[13px]">{item.description}</p>
+        <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-foreground-muted md:line-clamp-3 md:text-[13px]">{item.description}</p>
 
-        <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+        <div className="mt-3 flex flex-col gap-1 border-t border-border pt-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
           <p className="font-heading text-[1.1rem] leading-none tracking-[-0.02em] text-foreground">{priceLabel}</p>
           <p className="font-label text-[9px] tracking-[0.16em] text-foreground-subtle">
             {item.mode === "campaign" ? "EST. BUDGET" : "START FROM"}
           </p>
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2.5 border-t border-border pt-3 text-[12px] text-foreground-muted">
+        <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-2.5 border-t border-border pt-3 text-[12px] text-foreground-muted md:hidden">
+          {mobileSummaryItems.map((summary) => (
+            <div key={summary.label}>
+              <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">{summary.label}</p>
+              <p className="mt-1 truncate text-[12px] text-foreground md:text-[13px]">{summary.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-3 hidden grid-cols-2 gap-x-2 gap-y-2.5 border-t border-border pt-3 text-[12px] text-foreground-muted md:grid">
           {summaryItems.map((summary) => (
             <div key={summary.label}>
               <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">{summary.label}</p>
@@ -169,7 +179,7 @@ export function MarketplaceCard({ item }: MarketplaceCardProps) {
           <Link
             href={`/marketplace/${item.id}`}
             onClick={persistMarketplaceScrollPosition}
-            className="inline-flex min-h-10 w-full items-center justify-center border border-foreground bg-accent px-3 py-2 font-label text-[10px] tracking-[0.18em] text-accent-foreground transition-[opacity,transform] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:opacity-90"
+            className="inline-flex min-h-11 w-full items-center justify-center border border-foreground bg-accent px-3 py-2 font-label text-[10px] tracking-[0.18em] text-accent-foreground transition-[opacity,transform] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:opacity-90"
           >
             LIHAT DETAIL
           </Link>
