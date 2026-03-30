@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useRef, useState } from "react";
+import { setDummyAuthSession } from "@/app/(auth)/_actions/set-dummy-auth-session";
 import { gsap, useGSAP } from "@/lib/gsap";
 import type { AuthMode, UserRole } from "./auth-role-types";
 
@@ -88,27 +89,53 @@ export function AuthRoleForm({ mode, role }: AuthRoleFormProps) {
     { scope: rootRef }
   );
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) {
       return;
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      router.push(roleMeta.dashboardHref, { scroll: true });
-    }, 420);
+    try {
+      const formData = new FormData(event.currentTarget);
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      if (typeof email !== "string" || typeof password !== "string") {
+        throw new Error("Data login tidak valid.");
+      }
+
+      const result = await setDummyAuthSession({
+        email,
+        password,
+        role,
+      });
+
+      router.push(result.redirectTo, { scroll: true });
+      router.refresh();
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     if (isSubmitting) {
       return;
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      router.push(roleMeta.dashboardHref, { scroll: true });
-    }, 420);
+    try {
+      const result = await setDummyAuthSession({
+        email: `${role}-google@marketiv.local`,
+        password: "google-oauth-dummy",
+        role,
+      });
+
+      router.push(result.redirectTo, { scroll: true });
+      router.refresh();
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -180,6 +207,7 @@ export function AuthRoleForm({ mode, role }: AuthRoleFormProps) {
             <label className="auth-field block">
               <span className="mb-1.5 block text-xs text-foreground-subtle">Email</span>
               <input
+                name="email"
                 type="email"
                 required
                 className="w-full border border-border bg-surface/30 px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-border-strong/45"
@@ -190,6 +218,7 @@ export function AuthRoleForm({ mode, role }: AuthRoleFormProps) {
             <label className="auth-field block">
               <span className="mb-1.5 block text-xs text-foreground-subtle">Password</span>
               <input
+                name="password"
                 type="password"
                 required
                 minLength={8}

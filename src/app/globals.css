@@ -84,6 +84,31 @@
   --highlight: 0 0% 22%;
 }
 
+/* Dashboard override: keep workspace screens in light mode for consistent ops readability. */
+.dashboard-light {
+  --background: 0 0% 97%;
+  --surface: 0 0% 94%;
+  --surface-alt: 0 0% 91%;
+  --foreground: 0 0% 18%;
+  --foreground-muted: 0 0% 42%;
+  --foreground-subtle: 0 0% 60%;
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 100%;
+  --border: 0 0% 85%;
+  --border-strong: 0 0% 18%;
+  --ring: 0 0% 18%;
+  --highlight: 0 0% 32%;
+  color-scheme: light;
+  background-color: hsl(var(--background));
+}
+
+.dashboard-atmosphere {
+  background-color: hsl(var(--background));
+  background-image: radial-gradient(circle at 8% 6%, hsl(var(--surface-alt) / 0.58) 0, transparent 38%),
+    radial-gradient(circle at 92% 10%, hsl(var(--surface) / 0.46) 0, transparent 34%),
+    linear-gradient(180deg, hsl(var(--background)), hsl(var(--surface) / 0.72));
+}
+
 /* ============================================
    Tailwind v4 Theme — Token Registration
    ============================================ */
@@ -210,4 +235,23 @@ html::-webkit-scrollbar {
   font-family: var(--font-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
+}
+
+.umkm-dashboard-space {
+  position: relative;
+}
+
+.umkm-dashboard-space::before {
+  content: "";
+  position: absolute;
+  inset: -1rem;
+  z-index: -1;
+  background-image: radial-gradient(circle at 8% 18%, hsla(var(--foreground), 0.07) 0, transparent 55%),
+    radial-gradient(circle at 84% 78%, hsla(var(--foreground), 0.05) 0, transparent 50%),
+    linear-gradient(145deg, hsla(var(--surface), 0.55), hsla(var(--background), 0.22));
+  pointer-events: none;
+}
+
+.umkm-panel {
+  background-image: linear-gradient(145deg, hsla(var(--surface), 0.55), hsla(var(--background), 0.38));
 }

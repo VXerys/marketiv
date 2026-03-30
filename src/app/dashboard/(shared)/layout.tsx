@@ -8,8 +8,10 @@ interface SharedDashboardLayoutProps {
 
 export default function SharedDashboardLayout({ children }: SharedDashboardLayoutProps) {
   return (
-    <DashboardShell title="Marketiv Dashboard" roleLabel="Shared Workspace" navItems={sharedDashboardNav}>
-      {children}
-    </DashboardShell>
+    <div className="dashboard-light">
+      <DashboardShell title="Marketiv Dashboard" roleLabel="Shared Workspace" navItems={sharedDashboardNav}>
+        {children}
+      </DashboardShell>
+    </div>
   );
 }

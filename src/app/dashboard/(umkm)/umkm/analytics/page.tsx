@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { DashboardTabLock } from "@/components/dashboard/dashboard-tab-lock";
+import { UmkmAnalyticsBoard } from "@/components/dashboard/umkm/umkm-analytics-board";
+import { umkmDashboardMock } from "@/data/dashboard/umkm-mock";
+import { getDashboardAccess } from "@/lib/auth/getDashboardAccess";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -10,13 +14,21 @@ export const metadata: Metadata = buildMetadata({
   noIndex: true,
 });
 
-export default function UmkmAnalyticsPage() {
-  return (
-    <div>
-      <h1 className="font-heading text-4xl tracking-tight">Analitik Belanja Campaign</h1>
-      <p className="mt-3 max-w-xl text-foreground-muted">
-        Evaluasi pengeluaran, bandingkan hasil performa antar campaign, dan tentukan strategi anggaran berikutnya berbasis data.
-      </p>
-    </div>
-  );
+export default async function UmkmAnalyticsPage() {
+  const access = await getDashboardAccess("umkm");
+  if (access.kind === "guest") {
+    return (
+      <DashboardTabLock
+        title="Spend Analytics Terkunci"
+        description="Analitik performa campaign dan fraud-review membutuhkan data akun UMKM. Login dulu untuk membuka metrik biaya, views tervalidasi, dan indikator ROI."
+        hints={[
+          "Bandingkan biaya per 1.000 views antar campaign setelah login.",
+          "Lihat fraud queue dan status review untuk keputusan release dana.",
+          "Metrik personal UMKM tidak ditampilkan di mode preview publik.",
+        ]}
+      />
+    );
+  }
+
+  return <UmkmAnalyticsBoard highlights={umkmDashboardMock.analyticsHighlights} fraudQueue={umkmDashboardMock.fraudQueue} orders={umkmDashboardMock.escrowOrders} />;
 }

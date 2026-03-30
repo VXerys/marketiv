@@ -8,8 +8,10 @@ interface CreatorDashboardLayoutProps {
 
 export default function CreatorDashboardLayout({ children }: CreatorDashboardLayoutProps) {
   return (
-    <DashboardShell title="Marketiv Dashboard" roleLabel="Creator Workspace" navItems={creatorDashboardNav}>
-      {children}
-    </DashboardShell>
+    <div className="dashboard-light">
+      <DashboardShell title="Marketiv Dashboard" roleLabel="Creator Workspace" navItems={creatorDashboardNav}>
+        {children}
+      </DashboardShell>
+    </div>
   );
 }

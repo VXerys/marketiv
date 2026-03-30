@@ -24,9 +24,9 @@ export const DASHBOARD_ROUTES = {
 
 export const umkmDashboardNav: DashboardNavItem[] = [
   { label: "Overview", href: DASHBOARD_ROUTES.umkm.overview },
+  { label: "Campaign Brief", href: DASHBOARD_ROUTES.umkm.campaigns },
   { label: "Orders", href: DASHBOARD_ROUTES.umkm.orders },
   { label: "Spend Analytics", href: DASHBOARD_ROUTES.umkm.analytics },
-  { label: "Campaign Brief", href: DASHBOARD_ROUTES.umkm.campaigns },
 ];
 
 export const creatorDashboardNav: DashboardNavItem[] = [

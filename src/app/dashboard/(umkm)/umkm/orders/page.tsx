@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { DashboardTabLock } from "@/components/dashboard/dashboard-tab-lock";
+import { UmkmOrdersBoard } from "@/components/dashboard/umkm/umkm-orders-board";
+import { umkmDashboardMock } from "@/data/dashboard/umkm-mock";
+import { getDashboardAccess } from "@/lib/auth/getDashboardAccess";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -10,13 +14,21 @@ export const metadata: Metadata = buildMetadata({
   noIndex: true,
 });
 
-export default function UmkmOrdersPage() {
-  return (
-    <div>
-      <h1 className="font-heading text-4xl tracking-tight">Manajemen Order Campaign</h1>
-      <p className="mt-3 max-w-xl text-foreground-muted">
-        Monitor progres setiap order campaign, status validasi konten, dan kebutuhan tindak lanjut operasional secara terpusat.
-      </p>
-    </div>
-  );
+export default async function UmkmOrdersPage() {
+  const access = await getDashboardAccess("umkm");
+  if (access.kind === "guest") {
+    return (
+      <DashboardTabLock
+        title="Order & Escrow Terkunci"
+        description="Modul ini menampilkan status deposit, escrow, dan release dana. Untuk menjaga keamanan transaksi, akses penuh hanya tersedia setelah login UMKM."
+        hints={[
+          "Pantau update webhook Midtrans dan status order secara real-time setelah login.",
+          "Aksi operasional seperti validasi dan eskalasi dispute memerlukan identitas akun.",
+          "Kamu tetap bisa melihat ringkasan umum di tab Overview tanpa login.",
+        ]}
+      />
+    );
+  }
+
+  return <UmkmOrdersBoard orders={umkmDashboardMock.escrowOrders} />;
 }
