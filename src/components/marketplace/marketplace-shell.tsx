@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useDeferredValue, useMemo, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@/lib/gsap";
 import { UMKM_MARKETPLACE_CATEGORIES, MARKETPLACE_SORT_OPTIONS } from "@/data/constants";
 import type { MarketplaceListing, MarketplaceMode } from "@/types/marketplace";
@@ -54,6 +54,8 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+  const [isControlsCondensed, setIsControlsCondensed] = useState(false);
 
   const deferredSearch = useDeferredValue(search);
   const normalizedSearch = useMemo(() => normalizeSearch(deferredSearch), [deferredSearch]);
@@ -115,6 +117,21 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
     }
   );
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsControlsCondensed(window.scrollY > 180);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const activeFilterCount = Number(sortBy !== "relevance") + Number(category !== "all");
+
   return (
     <section ref={sectionRef} className="landing-light overflow-x-clip border-y border-border bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1320px] px-5 py-10 md:px-10 md:py-14">
@@ -147,13 +164,39 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
           </div>
         </div>
 
-        <div className="mp-controls sticky top-0 z-40 mt-3 border border-border bg-background/95 p-3 backdrop-blur md:top-2 md:p-4">
-          <div className="grid gap-2 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center">
+        <div
+          className={`mp-controls sticky top-0 z-40 mt-3 border border-border bg-background/95 backdrop-blur transition-all duration-300 md:top-2 ${
+            isControlsCondensed ? "p-2" : "p-3"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <label className="flex min-h-10 flex-1 items-center border border-border-strong/35 bg-background px-3">
+              <span className="sr-only">Cari campaign atau kreator</span>
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Cari campaign atau kreator"
+                className="w-full bg-transparent text-[12px] text-foreground placeholder:text-foreground-muted focus:outline-none"
+              />
+            </label>
+
+            <button
+              type="button"
+              onClick={() => setIsFilterSheetOpen(true)}
+              className="inline-flex min-h-10 items-center justify-center border border-border-strong/45 bg-background px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-foreground/65"
+              aria-label="Buka filter marketplace"
+            >
+              FILTER{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+            </button>
+          </div>
+
+          <div className="mt-2 flex items-center justify-between gap-2 border-t border-border/75 pt-2">
             <div className="inline-flex border border-border">
               <button
                 type="button"
                 onClick={() => setActiveMode("campaign")}
-                className={`min-h-10 px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[10px] md:tracking-[0.18em] ${
+                className={`min-h-9 px-2.5 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   activeMode === "campaign"
                     ? "border-r border-foreground bg-foreground text-background"
                     : "bg-background text-foreground hover:bg-surface"
@@ -165,7 +208,7 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
               <button
                 type="button"
                 onClick={() => setActiveMode("rate_card")}
-                className={`min-h-10 border-l border-border px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[10px] md:tracking-[0.18em] ${
+                className={`min-h-9 border-l border-border px-2.5 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   activeMode === "rate_card"
                     ? "border-l-foreground bg-foreground text-background"
                     : "bg-background text-foreground hover:bg-surface"
@@ -176,62 +219,88 @@ export function MarketplaceShell({ listings }: MarketplaceShellProps) {
               </button>
             </div>
 
-            <label className="flex min-h-10 items-center border border-border-strong/35 bg-background px-3">
-              <span className="sr-only">Cari campaign atau kreator</span>
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Cari campaign atau kreator"
-                className="w-full bg-transparent text-[12px] text-foreground placeholder:text-foreground-muted focus:outline-none"
-              />
-            </label>
-
-            <select
-              value={sortBy}
-              onChange={(event) => setSortBy(event.target.value as SortOption)}
-              className="min-h-10 border border-border-strong/40 bg-background px-2.5 font-label text-[9px] tracking-[0.14em] text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring md:px-3 md:text-[10px] md:tracking-[0.16em]"
-            >
-              {MARKETPLACE_SORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mt-2 flex items-center justify-between gap-2 border-t border-border/75 pt-2.5">
             <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">{filteredListings.length} HASIL</p>
-            <button
-              type="button"
-              onClick={() => {
-                setSearch("");
-                setCategory("all");
-                setSortBy("relevance");
-              }}
-              className="inline-flex min-h-8 items-center border border-border-strong/45 bg-background px-2.5 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-foreground/65"
-            >
-              RESET
-            </button>
-          </div>
-
-          <div className="no-scrollbar mt-2.5 flex gap-2 overflow-x-auto border-t border-border/75 pt-2.5">
-            {["all", ...UMKM_MARKETPLACE_CATEGORIES].map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setCategory(item)}
-                className={`shrink-0 min-h-9 border px-3 font-label text-[9px] tracking-[0.14em] transition-[opacity,transform,color,background-color,border-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 md:text-[10px] md:tracking-[0.16em] ${
-                  category === item
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border-strong/45 bg-background text-foreground hover:border-foreground/65 hover:bg-surface"
-                }`}
-              >
-                {item === "all" ? "SEMUA" : item.toUpperCase()}
-              </button>
-            ))}
           </div>
         </div>
+
+        {isFilterSheetOpen ? (
+          <div className="fixed inset-0 z-50 flex items-end bg-black/25 md:hidden" onClick={() => setIsFilterSheetOpen(false)}>
+            <div
+              className="w-full border-t border-border-strong bg-background p-4"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filter marketplace"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-label text-[10px] tracking-[0.18em] text-foreground">FILTER MARKETPLACE</p>
+                <button
+                  type="button"
+                  onClick={() => setIsFilterSheetOpen(false)}
+                  className="inline-flex min-h-9 items-center border border-border px-2.5 font-label text-[9px] tracking-[0.14em]"
+                >
+                  TUTUP
+                </button>
+              </div>
+
+              <div className="mt-3">
+                <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">URUTKAN</p>
+                <select
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value as SortOption)}
+                  className="mt-1.5 min-h-10 w-full border border-border-strong/40 bg-background px-2.5 font-label text-[9px] tracking-[0.14em] text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {MARKETPLACE_SORT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mt-3">
+                <p className="font-label text-[9px] tracking-[0.14em] text-foreground-subtle">KATEGORI</p>
+                <div className="mt-1.5 no-scrollbar flex gap-2 overflow-x-auto">
+                  {["all", ...UMKM_MARKETPLACE_CATEGORIES].map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => setCategory(item)}
+                      className={`shrink-0 min-h-9 border px-3 font-label text-[9px] tracking-[0.14em] ${
+                        category === item
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border-strong/45 bg-background text-foreground"
+                      }`}
+                    >
+                      {item === "all" ? "SEMUA" : item.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    setCategory("all");
+                    setSortBy("relevance");
+                  }}
+                  className="inline-flex min-h-10 items-center justify-center border border-border-strong/45 bg-background px-3 font-label text-[9px] tracking-[0.14em]"
+                >
+                  RESET
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsFilterSheetOpen(false)}
+                  className="inline-flex min-h-10 items-center justify-center border border-foreground bg-foreground px-3 font-label text-[9px] tracking-[0.14em] text-background"
+                >
+                  TERAPKAN
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {filteredListings.length === 0 ? (
           <div className="mt-6 border border-border bg-surface px-5 py-8 text-center md:mt-8">
