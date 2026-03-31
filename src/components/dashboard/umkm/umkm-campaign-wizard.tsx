@@ -75,6 +75,8 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isGeneratingAiBrief, setIsGeneratingAiBrief] = useState(false);
+  const [aiStatusMessage, setAiStatusMessage] = useState<string | null>(null);
   const [publishMessage, setPublishMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<StepErrors>({});
   const [formState, setFormState] = useState<CampaignDraftForm>(initialFormState);
@@ -97,8 +99,8 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
   });
 
   const budgetCampaign = useMemo(() => {
-    const harga = Number(formState.hargaPer1000Views);
-    const views = Number(formState.targetViews);
+    const harga = Number(formState.hargaPer1000Views.replace(/\./g, ""));
+    const views = Number(formState.targetViews.replace(/\./g, ""));
     if (!Number.isFinite(harga) || !Number.isFinite(views) || harga <= 0 || views <= 0) {
       return 0;
     }
@@ -153,6 +155,59 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
     }));
 
     setPublishMessage(null);
+    setAiStatusMessage(null);
+  };
+
+  const updateFormattedNumberField = (field: "hargaPer1000Views" | "kuotaKreator" | "targetViews", inputValue: string) => {
+    const onlyDigits = inputValue.replace(/\D/g, "");
+    const normalizedDigits = onlyDigits.replace(/^0+(?=\d)/, "");
+
+    if (!normalizedDigits) {
+      updateField(field, "");
+      return;
+    }
+
+    updateField(field, new Intl.NumberFormat("id-ID").format(Number(normalizedDigits)));
+  };
+
+  const generateAiBriefDraft = async () => {
+    if (!formState.judulCampaign.trim() || !formState.niche) {
+      setErrors((previous) => ({
+        ...previous,
+        judulCampaign: !formState.judulCampaign.trim() ? "Isi judul campaign dulu sebelum generate brief AI." : previous.judulCampaign,
+        niche: !formState.niche ? "Pilih niche dulu sebelum generate brief AI." : previous.niche,
+      }));
+      return;
+    }
+
+    setIsGeneratingAiBrief(true);
+
+    const nicheHashtagMap: Record<CampaignNiche, string[]> = {
+      Kuliner: ["#KulinerLokal", "#UMKMSukabumi", "#JajananNusantara"],
+      Fesyen: ["#FesyenLokal", "#BanggaProdukLokal", "#StyleIndonesia"],
+      Pariwisata: ["#ExploreSukabumi", "#WisataLokal", "#JelajahJabar"],
+      Edukasi: ["#BelajarBareng", "#EdukasiKreatif", "#TipsHarian"],
+      Kecantikan: ["#CantikLokal", "#BeautyIndonesia", "#SkincareLokal"],
+      Lainnya: ["#ProdukLokal", "#UMKMNaikKelas", "#MarketivCampaign"],
+    };
+
+    const shortDescription = formState.deskripsiBrief.trim().slice(0, 120);
+
+    await new Promise<void>((resolve) => {
+      window.setTimeout(() => resolve(), 650);
+    });
+
+    const aiBrief = [
+      `Pesan utama: ${formState.judulCampaign.trim()} adalah solusi ${formState.niche.toLowerCase()} yang relevan untuk audiens lokal Jawa Barat.`,
+      "Gaya video: energik, dekat dengan keseharian, dan fokus pada manfaat nyata dalam 3 detik pertama.",
+      `Poin wajib: tampilkan produk secara close-up, jelaskan manfaat inti, dan sisipkan testimoni singkat. ${shortDescription ? `Konteks tambahan: ${shortDescription}.` : ""}`.trim(),
+      `Hashtag rekomendasi: ${nicheHashtagMap[formState.niche].join(" ")}.`,
+      "CTA: Ajak penonton cek produk sekarang dan tulis pengalaman mereka di komentar.",
+    ].join("\n\n");
+
+    updateField("deskripsiBrief", aiBrief);
+    setAiStatusMessage("Draf brief berhasil dibuat AI. Silakan review dan edit sebelum lanjut ke step berikutnya.");
+    setIsGeneratingAiBrief(false);
   };
 
   const validateCurrentStep = (): boolean => {
@@ -186,9 +241,9 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
     }
 
     if (currentStep === 3) {
-      const harga = Number(formState.hargaPer1000Views);
-      const kuota = Number(formState.kuotaKreator);
-      const views = Number(formState.targetViews);
+      const harga = Number(formState.hargaPer1000Views.replace(/\./g, ""));
+      const kuota = Number(formState.kuotaKreator.replace(/\./g, ""));
+      const views = Number(formState.targetViews.replace(/\./g, ""));
 
       if (!Number.isFinite(harga) || harga <= 0) {
         nextErrors.hargaPer1000Views = "Harga per 1.000 views harus lebih dari 0.";
@@ -259,8 +314,8 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
       budgetCampaign,
       komisiPlatform,
       totalBayar,
-      kuotaKreator: Number(formState.kuotaKreator),
-      targetViews: Number(formState.targetViews),
+      kuotaKreator: Number(formState.kuotaKreator.replace(/\./g, "")),
+      targetViews: Number(formState.targetViews.replace(/\./g, "")),
       createdAt: new Date().toISOString(),
     };
 
@@ -273,8 +328,8 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
   };
 
   return (
-    <div ref={rootRef} className="umkm-dashboard-space space-y-7">
-      <section className="umkm-campaign-head umkm-panel border border-border p-6 md:p-8">
+    <div ref={rootRef} className="umkm-dashboard-space space-y-5">
+      <section className="umkm-campaign-head umkm-panel border border-border p-5 md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">CAMPAIGN MODE BRIEF BUILDER</p>
@@ -295,8 +350,8 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
         </div>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <article className="umkm-campaign-step umkm-panel order-2 border border-border p-4 md:p-6 xl:order-1">
+      <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr] xl:items-start">
+        <article className="umkm-campaign-step umkm-panel order-2 self-start border border-border p-4 md:p-5 xl:order-1">
           <p className="font-label text-[10px] tracking-[0.18em] text-foreground-subtle">PANDUAN STEP</p>
           <div className="mt-4 space-y-2">
             {steps.map((step) => {
@@ -334,7 +389,7 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
           </div>
         </article>
 
-        <article className="umkm-campaign-panel umkm-panel order-1 border border-border p-4 md:p-6 xl:order-2">
+        <article className="umkm-campaign-panel umkm-panel order-1 self-start border border-border p-4 md:p-5 xl:order-2">
           {currentStep === 1 && (
             <div className="space-y-4">
               <h2 className="font-heading text-2xl tracking-tight md:text-3xl">Step 1 - Informasi Produk</h2>
@@ -357,7 +412,18 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
                   className="min-h-36 w-full border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-border-strong"
                   placeholder="Produk saya adalah... Saya ingin kreator membuat video..."
                 />
-                <p className="text-xs text-foreground-subtle">Minimal 50 karakter. Tombol AI Brief Assistant akan diintegrasikan di fase backend.</p>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs text-foreground-subtle">Minimal 50 karakter. Anda bisa generate draft cepat via AI Brief Assistant.</p>
+                  <button
+                    type="button"
+                    onClick={generateAiBriefDraft}
+                    disabled={isGeneratingAiBrief}
+                    className="inline-flex min-h-9 items-center border border-border px-3 py-1.5 font-label text-[10px] tracking-[0.16em] text-foreground transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isGeneratingAiBrief ? "AI MENYUSUN..." : "BANTU SAYA DENGAN AI"}
+                  </button>
+                </div>
+                {aiStatusMessage && <p className="text-xs text-emerald-700">{aiStatusMessage}</p>}
                 {errors.deskripsiBrief && <p className="text-sm text-red-600">{errors.deskripsiBrief}</p>}
               </label>
 
@@ -424,12 +490,12 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
               <label className="block space-y-1.5">
                 <span className="text-sm text-foreground-muted">Bayaran per 1.000 Views (Rp)</span>
                 <input
-                  type="number"
-                  min={1}
+                  type="text"
+                  inputMode="numeric"
                   value={formState.hargaPer1000Views}
-                  onChange={(event) => updateField("hargaPer1000Views", event.target.value)}
+                  onChange={(event) => updateFormattedNumberField("hargaPer1000Views", event.target.value)}
                   className="min-h-11 w-full border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-border-strong"
-                  placeholder="Contoh: 3500"
+                  placeholder="Contoh: 3.500"
                 />
                 <p className="text-xs text-foreground-subtle">Range rekomendasi: Rp 2.000 - Rp 10.000 per 1.000 views.</p>
                 {errors.hargaPer1000Views && <p className="text-sm text-red-600">{errors.hargaPer1000Views}</p>}
@@ -439,11 +505,10 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
                 <label className="block space-y-1.5">
                   <span className="text-sm text-foreground-muted">Kuota Kreator</span>
                   <input
-                    type="number"
-                    min={1}
-                    max={100}
+                    type="text"
+                    inputMode="numeric"
                     value={formState.kuotaKreator}
-                    onChange={(event) => updateField("kuotaKreator", event.target.value)}
+                    onChange={(event) => updateFormattedNumberField("kuotaKreator", event.target.value)}
                     className="min-h-11 w-full border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-border-strong"
                     placeholder="1 - 100"
                   />
@@ -453,12 +518,12 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
                 <label className="block space-y-1.5">
                   <span className="text-sm text-foreground-muted">Target Views</span>
                   <input
-                    type="number"
-                    min={1000}
+                    type="text"
+                    inputMode="numeric"
                     value={formState.targetViews}
-                    onChange={(event) => updateField("targetViews", event.target.value)}
+                    onChange={(event) => updateFormattedNumberField("targetViews", event.target.value)}
                     className="min-h-11 w-full border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-border-strong"
-                    placeholder="Contoh: 50000"
+                    placeholder="Contoh: 50.000"
                   />
                   {errors.targetViews && <p className="text-sm text-red-600">{errors.targetViews}</p>}
                 </label>
@@ -484,7 +549,7 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
                 <p>Niche: <span className="text-foreground">{formState.niche || "-"}</span></p>
                 <p>File Referensi: <span className="text-foreground">{formState.assetFileName || "Tidak ada"}</span></p>
                 <p>URL Eksternal: <span className="text-foreground">{formState.assetExternalUrl || "Tidak ada"}</span></p>
-                <p>Harga / 1.000 views: <span className="text-foreground">{formState.hargaPer1000Views ? formatRupiah(Number(formState.hargaPer1000Views)) : "-"}</span></p>
+                <p>Harga / 1.000 views: <span className="text-foreground">{formState.hargaPer1000Views ? formatRupiah(Number(formState.hargaPer1000Views.replace(/\./g, ""))) : "-"}</span></p>
                 <p>Kuota Kreator: <span className="text-foreground">{formState.kuotaKreator || "-"}</span></p>
                 <p>Target Views: <span className="text-foreground">{formState.targetViews || "-"}</span></p>
                 <p>Total Bayar Escrow: <span className="font-semibold text-foreground">{formatRupiah(totalBayar)}</span></p>

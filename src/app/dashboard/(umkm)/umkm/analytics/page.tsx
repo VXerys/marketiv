@@ -6,11 +6,11 @@ import { getDashboardAccess } from "@/lib/auth/getDashboardAccess";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Analitik Belanja Campaign",
+  title: "Analitik Performa",
   description:
-    "Analisis biaya campaign, performa views tervalidasi, dan tren efektivitas untuk mengoptimalkan ROI pemasaran UMKM.",
+    "Pantau pengeluaran, traksi tayangan, dan efisiensi kolaborasi kreator untuk mengoptimalkan performa marketing UMKM.",
   path: "/dashboard/umkm/analytics",
-  keywords: ["analitik campaign umkm", "roi pemasaran", "biaya per views", "dashboard performa"],
+  keywords: ["analitik performa umkm", "dashboard marketing", "cost per view", "traksi tayangan"],
   noIndex: true,
 });
 
@@ -19,11 +19,11 @@ export default async function UmkmAnalyticsPage() {
   if (access.kind === "guest") {
     return (
       <DashboardTabLock
-        title="Spend Analytics Terkunci"
-        description="Analitik performa campaign dan fraud-review membutuhkan data akun UMKM. Login dulu untuk membuka metrik biaya, views tervalidasi, dan indikator ROI."
+        title="Analitik Performa Terkunci"
+        description="Halaman analitik membutuhkan data akun UMKM. Login dulu untuk membuka metrik pengeluaran, traksi tayangan, dan efisiensi kolaborasi kreator."
         hints={[
-          "Bandingkan biaya per 1.000 views antar campaign setelah login.",
-          "Lihat fraud queue dan status review untuk keputusan release dana.",
+          "Bandingkan CPV antar kampanye untuk melihat efisiensi biaya.",
+          "Pantau distribusi anggaran Campaign vs Rate Card secara real-time.",
           "Metrik personal UMKM tidak ditampilkan di mode preview publik.",
         ]}
       />

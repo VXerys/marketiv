@@ -1,6 +1,18 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import {
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { useGSAP } from "@/lib/gsap";
 import type { UmkmAnalyticsHighlight, UmkmEscrowOrderItem, UmkmFraudQueueItem } from "@/types/dashboard";
 import { animateUmkmAnalyticsBoard, animateUmkmAnalyticsPeriodChange } from "./umkm-analytics-board.animations";
@@ -11,30 +23,29 @@ interface UmkmAnalyticsBoardProps {
   orders: UmkmEscrowOrderItem[];
 }
 
-interface AnalyticsTransactionRow {
+interface AnalyticsPerformanceRow {
   id: string;
-  orderId: string;
   campaignName: string;
-  creatorName: string;
-  creatorHandle: string;
-  claimDate: string;
-  budget: number;
-  status: "review" | "clear";
+  mode: "campaign" | "rate-card";
+  status: "selesai" | "berjalan" | "menunggu-escrow";
+  spend: number;
+  views: number;
+  cpv: number;
+  roas: number;
 }
 
-const weeklyLabels = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
-const monthlyLabels = ["W1", "W2", "W3", "W4"];
-
-const periodTrafficFactors = {
-  weekly: [0.86, 0.74, 0.91, 1.02, 0.96, 1.08, 0.82],
-  monthly: [0.88, 1.06, 0.92, 1.14],
+const chartPalette = {
+  primary: "#1d4ed8",
+  primarySoft: "#60a5fa",
+  border: "#dbe3ee",
+  label: "#5d6b82",
 } as const;
 
-const categoryPalette = {
-  Kuliner: "bg-[#3f48f4]",
-  Fesyen: "bg-[#5f3bf3]",
-  Kecantikan: "bg-[#a996ff]",
-} as const;
+const dateRangeOptions = [
+  { value: "7", label: "7 Hari Terakhir" },
+  { value: "30", label: "30 Hari Terakhir" },
+  { value: "90", label: "90 Hari Terakhir" },
+] as const;
 
 function parseViewsProgress(value: string): number {
   const [currentViewsRaw] = value.split("/");
@@ -65,15 +76,56 @@ function formatCompactNumber(value: number): string {
   }).format(value);
 }
 
+function formatNumber(value: number): string {
+  return new Intl.NumberFormat("id-ID", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatModeLabel(value: AnalyticsPerformanceRow["mode"]): string {
+  return value === "campaign" ? "Campaign" : "Rate Card";
+}
+
 function csvEscape(value: string): string {
   return `"${value.replace(/"/g, '""')}"`;
 }
 
+function inferMode(order: UmkmEscrowOrderItem): AnalyticsPerformanceRow["mode"] {
+  const normalized = order.campaignTitle.toLowerCase();
+  if (normalized.includes("challenge") || normalized.includes("promo") || normalized.includes("deal")) {
+    return "campaign";
+  }
+
+  return order.id.charCodeAt(order.id.length - 1) % 2 === 0 ? "campaign" : "rate-card";
+}
+
+function inferStatus(order: UmkmEscrowOrderItem): AnalyticsPerformanceRow["status"] {
+  if (order.escrowState === "released") {
+    return "selesai";
+  }
+
+  if (order.escrowState === "processing") {
+    return "menunggu-escrow";
+  }
+
+  return "berjalan";
+}
+
+function statusBadgeClass(status: AnalyticsPerformanceRow["status"]): string {
+  if (status === "selesai") {
+    return "border-[#d6f0df] bg-[#edf9f1] text-[#1f7a42]";
+  }
+
+  if (status === "berjalan") {
+    return "border-[#dce8ff] bg-[#edf3ff] text-[#2147a8]";
+  }
+
+  return "border-[#f1dfc7] bg-[#fff5e9] text-[#9a5a08]";
+}
+
 export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnalyticsBoardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const [period, setPeriod] = useState<"weekly" | "monthly">("weekly");
-  const [statusFilter, setStatusFilter] = useState<"all" | "review" | "clear">("all");
-  const [isCompact, setIsCompact] = useState(false);
+  const [dateRange, setDateRange] = useState<"7" | "30" | "90">("30");
 
   useGSAP(
     () => {
@@ -98,117 +150,97 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
         animateUmkmAnalyticsPeriodChange(rootRef.current);
       }
     },
-    { scope: rootRef, dependencies: [period] }
+    { scope: rootRef, dependencies: [dateRange] }
+  );
+
+  const performanceRows = useMemo<AnalyticsPerformanceRow[]>(
+    () =>
+      orders.map((order) => {
+        const views = parseViewsProgress(order.viewsProgress);
+        const spend = order.escrowAmount;
+        const cpv = views > 0 ? spend / views : 0;
+        const roas = spend > 0 ? (views * 25) / spend : 0;
+
+        return {
+          id: order.id,
+          campaignName: order.campaignTitle,
+          mode: inferMode(order),
+          status: inferStatus(order),
+          spend,
+          views,
+          cpv,
+          roas,
+        };
+      }),
+    [orders]
   );
 
   const summary = useMemo(() => {
-    const validatedViews = highlights.find((item) => item.id === "validated-views")?.value ?? "1.24M";
-    const costPerThousand = highlights.find((item) => item.id === "cost-per-1000")?.value ?? "Rp 3.480";
-    const conversionLift = highlights.find((item) => item.id === "conversion-lift")?.value ?? "+18.7%";
+    const totalSpend = performanceRows.reduce((total, item) => total + item.spend, 0);
+    const totalViews = performanceRows.reduce((total, item) => total + item.views, 0);
+    const uniqueCreators = new Set(orders.map((item) => item.creatorHandle)).size;
+    const cpv = totalViews > 0 ? totalSpend / totalViews : 0;
+    const trendFromHighlights = highlights.find((item) => item.id === "conversion-lift")?.value ?? "+15%";
 
     return {
-      validatedViews,
-      costPerThousand,
-      conversionLift,
-      totalCampaignBudget: orders.reduce((total, item) => total + item.escrowAmount, 0),
+      totalSpend,
+      totalViews,
+      cpv,
+      uniqueCreators,
+      trendFromHighlights,
     };
-  }, [highlights, orders]);
+  }, [highlights, orders, performanceRows]);
 
-  const transactionRows = useMemo<AnalyticsTransactionRow[]>(() => {
-    const queueMap = new Map(fraudQueue.map((item) => [item.campaignTitle, item.state]));
+  const tractionData = useMemo(() => {
+    const days = Number(dateRange);
+    const avgPerDay = Math.max(1, Math.round(summary.totalViews / Math.max(1, days)));
 
-    return orders.map((order) => {
-      const queueStatus = queueMap.get(order.campaignTitle);
-      const inferredStatus: "review" | "clear" =
-        order.submissionStatus === "disputed" || order.submissionStatus === "submitted" ? "review" : "clear";
+    return Array.from({ length: days }, (_, index) => {
+      const day = index + 1;
+      const linearGrowth = 0.62 + day / days;
+      const pulse = 1 + ((day % 6) - 2) * 0.04;
 
       return {
-        id: order.id,
-        orderId: `#${order.id}`,
-        campaignName: order.campaignTitle,
-        creatorName: order.creatorName,
-        creatorHandle: order.creatorHandle,
-        claimDate: order.claimDate,
-        budget: order.escrowAmount,
-        status: queueStatus ?? inferredStatus,
+        day: `H-${days - index}`,
+        views: Math.round(avgPerDay * linearGrowth * pulse),
       };
     });
-  }, [fraudQueue, orders]);
+  }, [dateRange, summary.totalViews]);
 
-  const periodData = useMemo(() => {
-    const totalViews = Math.max(orders.reduce((accumulator, item) => accumulator + parseViewsProgress(item.viewsProgress), 0), 42_000);
-    const labels = period === "weekly" ? weeklyLabels : monthlyLabels;
-    const factors = period === "weekly" ? periodTrafficFactors.weekly : periodTrafficFactors.monthly;
-    const denominator = factors.reduce((sum, value) => sum + value, 0);
-    const values = factors.map((factor) => Math.round((totalViews * factor) / denominator));
-
-    return {
-      labels,
-      values,
-      max: Math.max(...values),
-      totalViews,
-    };
-  }, [orders, period]);
-
-  const categorySplit = useMemo(() => {
-    const aggregates: Record<"Kuliner" | "Fesyen" | "Kecantikan", number> = {
-      Kuliner: 0,
-      Fesyen: 0,
-      Kecantikan: 0,
-    };
-
-    orders.forEach((order) => {
-      const views = parseViewsProgress(order.viewsProgress);
-      const normalized = order.campaignTitle.toLowerCase();
-
-      if (normalized.includes("sambal") || normalized.includes("kopi") || normalized.includes("teh") || normalized.includes("catering")) {
-        aggregates.Kuliner += views;
-        return;
-      }
-
-      if (normalized.includes("batik") || normalized.includes("fesyen")) {
-        aggregates.Fesyen += views;
-        return;
-      }
-
-      aggregates.Kecantikan += views;
-    });
+  const budgetSplitData = useMemo(() => {
+    const campaignBudget = performanceRows.filter((item) => item.mode === "campaign").reduce((total, item) => total + item.spend, 0);
+    const rateCardBudget = performanceRows.filter((item) => item.mode === "rate-card").reduce((total, item) => total + item.spend, 0);
+    const reviewWeight = Math.min(0.12, fraudQueue.length * 0.01);
 
     return [
-      { label: "Kuliner", amount: aggregates.Kuliner, tone: categoryPalette.Kuliner },
-      { label: "Fesyen", amount: aggregates.Fesyen, tone: categoryPalette.Fesyen },
-      { label: "Kecantikan", amount: aggregates.Kecantikan, tone: categoryPalette.Kecantikan },
+      {
+        label: "Mode Campaign (Viral)",
+        amount: Math.round(campaignBudget * (1 + reviewWeight)),
+        color: "#1d4ed8",
+      },
+      {
+        label: "Mode Rate Card (Influencer)",
+        amount: Math.round(rateCardBudget * (1 - reviewWeight)),
+        color: "#0f766e",
+      },
     ];
-  }, [orders]);
+  }, [fraudQueue.length, performanceRows]);
 
-  const filteredRows = useMemo(() => {
-    if (statusFilter === "all") {
-      return transactionRows;
-    }
+  const totalBudgetSplit = budgetSplitData.reduce((total, item) => total + item.amount, 0);
 
-    return transactionRows.filter((item) => item.status === statusFilter);
-  }, [statusFilter, transactionRows]);
-
-  const totalCategoryAmount = categorySplit.reduce((accumulator, item) => accumulator + item.amount, 0);
-
-  const donutStyle = useMemo(() => {
-    if (totalCategoryAmount <= 0) {
-      return {
-        background: "conic-gradient(#3f48f4 0 62%, #5f3bf3 62% 74%, #a996ff 74% 100%)",
-      };
-    }
-
-    const kulinerPct = (categorySplit[0].amount / totalCategoryAmount) * 100;
-    const fesyenPct = kulinerPct + (categorySplit[1].amount / totalCategoryAmount) * 100;
-
-    return {
-      background: `conic-gradient(#3f48f4 0 ${kulinerPct}%, #5f3bf3 ${kulinerPct}% ${fesyenPct}%, #a996ff ${fesyenPct}% 100%)`,
-    };
-  }, [categorySplit, totalCategoryAmount]);
+  const panelClassName =
+    "umkm-panel rounded-2xl border border-border/90 bg-white shadow-[0_16px_34px_-28px_rgba(15,23,42,0.35)]";
 
   const exportRows = () => {
-    const header = ["Order ID", "Campaign", "Creator", "Claim Date", "Budget", "Status"];
-    const body = filteredRows.map((item) => [item.orderId, item.campaignName, `${item.creatorName} (${item.creatorHandle})`, item.claimDate, String(item.budget), item.status]);
+    const header = ["Nama Pekerjaan/Kampanye", "Mode", "Status", "Pengeluaran", "Views Didapat", "ROAS / CPV"];
+    const body = performanceRows.map((item) => [
+      item.campaignName,
+      formatModeLabel(item.mode),
+      item.status,
+      formatRupiah(item.spend),
+      `${formatNumber(item.views)} Views`,
+      `ROAS ${item.roas.toFixed(2)}x | CPV ${formatRupiah(Math.round(item.cpv))}`,
+    ]);
     const csvContent = [header, ...body].map((line) => line.map(csvEscape).join(",")).join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -222,264 +254,240 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
   };
 
   return (
-    <div ref={rootRef} className="umkm-dashboard-space space-y-7">
-      <section className="umkm-analytics-head umkm-panel border border-border p-5 md:p-6">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div ref={rootRef} className="umkm-dashboard-space space-y-4">
+      <section className={`umkm-analytics-head ${panelClassName} p-5 md:p-6`}>
+        <header className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">CAMPAIGN ANALYTICS</p>
-            <h1 className="mt-2 font-heading text-3xl tracking-tight md:text-4xl">Analitik Campaign UMKM</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-foreground-muted">
-              Ringkasan performa budget, distribusi niche, dan transaksi campaign mode untuk bantu keputusan release escrow dan optimasi ROI.
-            </p>
+            <h1 className="font-heading text-3xl tracking-tight text-slate-900 md:text-4xl">Analitik Performa</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">Pantau pengeluaran dan traksi sosial media brand Anda.</p>
           </div>
 
-          <select
-            value={period}
-            onChange={(event) => setPeriod(event.target.value as "weekly" | "monthly")}
-            className="min-h-10 w-full border border-border bg-background px-3 text-sm text-foreground outline-none md:w-auto"
-          >
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
-        </div>
-      </section>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <label className="sr-only" htmlFor="analytics-date-range">
+              Pilih rentang tanggal
+            </label>
+            <select
+              id="analytics-date-range"
+              value={dateRange}
+              onChange={(event) => setDateRange(event.target.value as "7" | "30" | "90")}
+              className="min-h-11 rounded-xl border border-[#d6deea] bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#1d4ed8]/15"
+            >
+              {dateRangeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
 
-      <section className="grid gap-4 xl:grid-cols-12">
-        <div className="space-y-4 xl:col-span-3">
-          <article className="umkm-analytics-top-card overflow-hidden border border-[#5d53ff] bg-gradient-to-br from-[#4b48ff] to-[#6b4de5] p-5 text-white shadow-[0_16px_40px_-24px_rgba(71,63,255,0.8)]">
-            <p className="text-sm text-white/90">Budget Campaign Aktif</p>
-            <p className="mt-4 font-heading text-4xl tracking-tight">{formatRupiah(summary.totalCampaignBudget)}</p>
-            <p className="mt-2 text-xs text-white/85">Akumulasi budget dari semua order campaign aktif UMKM.</p>
-            <span className="mt-4 inline-flex items-center rounded-md bg-white/15 px-2 py-1 text-xs">+7% dari bulan lalu</span>
-          </article>
-
-          <article className="umkm-analytics-top-card umkm-panel border border-border p-5">
-            <p className="text-sm text-foreground-muted">Escrow Siap Release</p>
-            <p className="mt-4 font-heading text-4xl tracking-tight">{summary.conversionLift}</p>
-            <p className="mt-2 text-xs text-foreground-muted">Kenaikan performa order sesudah campaign berjalan.</p>
-            <span className="mt-4 inline-flex items-center rounded-md bg-[#e7f7eb] px-2 py-1 text-xs text-[#1d7c46]">+5 campaign clear</span>
-          </article>
-        </div>
-
-        <article className="umkm-analytics-top-card umkm-panel border border-border p-5 xl:col-span-3">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-sm text-foreground">Response Validation Time</p>
-              <p className="text-xs text-foreground-subtle">Rata-rata durasi admin review submission.</p>
-            </div>
-            <button type="button" className="inline-flex size-8 items-center justify-center rounded-lg border border-border text-foreground-subtle">
-              ...
+            <button
+              type="button"
+              onClick={exportRows}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1e3a8a] px-4 text-sm font-medium text-white transition hover:bg-[#1d4ed8]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M12 3v11" strokeLinecap="round" />
+                <path d="m8.5 10.5 3.5 3.5 3.5-3.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M4 17.5h16" strokeLinecap="round" />
+              </svg>
+              Download Laporan (CSV/PDF)
             </button>
           </div>
+        </header>
+      </section>
 
-          <p className="mt-5 font-heading text-5xl tracking-tight">00:01:30</p>
-
-          <svg className="mt-4 h-28 w-full rounded-lg bg-[#f4f5ff]" viewBox="0 0 240 90" fill="none" aria-hidden="true">
-            <path d="M4 68C22 61 30 45 46 44C62 43 72 58 88 58C104 58 112 49 126 42C142 35 150 51 166 53C182 55 194 30 210 28C222 26 230 35 236 31" stroke="#5853ec" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="46" cy="44" r="3" fill="#5853ec" />
-            <circle cx="126" cy="42" r="3" fill="#5853ec" />
-            <circle cx="210" cy="28" r="3" fill="#5853ec" />
-          </svg>
-
-          <span className="mt-4 inline-flex items-center rounded-md bg-[#e7f7eb] px-2 py-1 text-xs text-[#1d7c46]">+8% lebih cepat</span>
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+          <p className="text-sm text-slate-600">Total Pengeluaran</p>
+          <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{formatRupiah(summary.totalSpend)}</p>
+          <p className="mt-2 inline-flex rounded-full border border-[#d7e4ff] bg-[#ecf3ff] px-2.5 py-1 text-xs font-medium text-[#2456bb]">
+            {summary.trendFromHighlights} dari bulan lalu
+          </p>
         </article>
 
-        <article className="umkm-analytics-overview umkm-panel border border-border p-5 xl:col-span-6">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">Views Overview</h2>
-              <p className="text-sm text-foreground-subtle">Pergerakan views tervalidasi untuk campaign aktif berdasarkan periode terpilih.</p>
-            </div>
-            <span className="rounded-lg border border-border bg-background px-3 py-1 text-xs text-foreground-muted">{period === "weekly" ? "Weekly" : "Monthly"}</span>
+        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-sm text-slate-600">Total Tayangan (Views)</p>
+            <svg viewBox="0 0 24 24" className="size-5 text-[#1d4ed8]" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
           </div>
+          <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{formatNumber(summary.totalViews)} Views</p>
+          <p className="mt-2 text-xs text-slate-500">Akumulasi tayangan tervalidasi dari kolaborasi aktif.</p>
+        </article>
 
-          <div className="mt-6 grid items-end gap-3" style={{ gridTemplateColumns: `repeat(${periodData.labels.length}, minmax(0, 1fr))` }}>
-            {periodData.values.map((bar, index) => {
-              const percentage = Math.max(25, Math.round((bar / periodData.max) * 100));
-              return (
-                <div key={`${periodData.labels[index]}-${bar}`} className="flex flex-col items-center gap-2">
-                  <div className="relative flex h-56 w-full max-w-[52px] items-end justify-center rounded-3xl bg-[#f2f2f5] px-1.5 py-1">
-                    <div className="umkm-analytics-bar-fill w-full rounded-3xl bg-gradient-to-b from-[#6d63ff] to-[#3f48f4]" style={{ height: `${percentage}%` }} />
-                  </div>
-                  <span className="text-xs text-foreground-subtle">{periodData.labels[index]}</span>
-                </div>
-              );
-            })}
-          </div>
+        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+          <p className="text-sm text-slate-600">Cost-per-View (CPV)</p>
+          <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{formatRupiah(Math.round(summary.cpv))} / View</p>
+          <p className="mt-2 text-xs text-slate-500">Semakin rendah CPV, semakin efisien biaya awareness UMKM Anda.</p>
+        </article>
 
-          <p className="mt-3 text-xs text-foreground-muted">Views tervalidasi: {summary.validatedViews} dengan biaya rata-rata {summary.costPerThousand} per 1.000 views. Total indikator periode: {formatCompactNumber(periodData.totalViews)} views.</p>
+        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+          <p className="text-sm text-slate-600">Total Kreator Bekerja Sama</p>
+          <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{summary.uniqueCreators} Kreator</p>
+          <p className="mt-2 text-xs text-slate-500">Jumlah kreator unik yang berkolaborasi di periode terpilih.</p>
         </article>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[0.9fr_1.6fr]">
-        <article className="umkm-analytics-bottom umkm-panel border border-border p-5">
-          <div className="flex items-center justify-between gap-3">
+      <section className="grid gap-4 xl:grid-cols-12 xl:items-start">
+        <article className={`umkm-analytics-overview ${panelClassName} p-5 xl:col-span-8`}>
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight">Kategori Campaign</h2>
-              <p className="text-sm text-foreground-subtle">Distribusi niche campaign yang sedang aktif.</p>
+              <h2 className="text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Traksi Tayangan (Views) {dateRange} Hari Terakhir</h2>
+              <p className="text-sm text-slate-600">Kurva pertumbuhan exposure kampanye menunjukkan momentum awareness brand.</p>
             </div>
-            <span className="rounded-lg border border-border bg-background px-3 py-1 text-xs text-foreground-muted">{period === "weekly" ? "Weekly" : "Monthly"}</span>
+            <span className="rounded-lg border border-[#d6deea] bg-[#f8fbff] px-3 py-1 text-xs text-slate-600">Views Trend</span>
           </div>
 
-          <div className="mt-6 flex justify-center">
-            <div className="relative size-[220px] rounded-full" style={donutStyle}>
-              <div className="absolute inset-[18px] rounded-full bg-background" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-sm text-foreground-subtle">Total Views</p>
-                  <p className="mt-1 font-heading text-4xl tracking-tight">{formatCompactNumber(totalCategoryAmount)}</p>
+          <div className="umkm-analytics-chart-block mt-4 h-72 rounded-xl border border-[#dbe3ee] bg-[#f9fbff] p-3">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={tractionData} margin={{ top: 8, right: 8, left: 2, bottom: 2 }}>
+                <CartesianGrid stroke={chartPalette.border} strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: chartPalette.label }} minTickGap={14} />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fontSize: 11, fill: chartPalette.label }}
+                  tickFormatter={(value) => formatCompactNumber(Number(value))}
+                  width={40}
+                />
+                <Tooltip
+                  formatter={(value) => [`${formatNumber(Number(value))} Views`, "Tayangan"]}
+                  contentStyle={{ borderRadius: "10px", borderColor: "#d8e0eb", fontSize: "12px", backgroundColor: "#ffffff" }}
+                  labelStyle={{ color: "#334155" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="views"
+                  stroke={chartPalette.primary}
+                  strokeWidth={2.6}
+                  dot={{ r: 0 }}
+                  activeDot={{ r: 4, fill: chartPalette.primary }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </article>
+
+        <article className={`umkm-analytics-bottom ${panelClassName} p-5 xl:col-span-4`}>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight text-slate-900">Distribusi Anggaran</h2>
+              <p className="text-sm text-slate-600">Perbandingan alokasi mode campaign vs rate card.</p>
+            </div>
+            <span className="rounded-lg border border-[#d6deea] bg-[#f8fbff] px-3 py-1 text-xs text-slate-600">Budget Split</span>
+          </div>
+
+          <div className="umkm-analytics-chart-block mt-4 h-64 rounded-xl border border-[#dbe3ee] bg-[#f9fbff] p-2">
+            <div className="relative h-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={budgetSplitData} dataKey="amount" nameKey="label" innerRadius={62} outerRadius={90} paddingAngle={2} stroke="none">
+                    {budgetSplitData.map((item) => (
+                      <Cell key={item.label} fill={item.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => [formatRupiah(Number(value)), "Anggaran"]}
+                    contentStyle={{ borderRadius: "10px", borderColor: "#d8e0eb", fontSize: "12px", backgroundColor: "#ffffff" }}
+                    labelStyle={{ color: "#334155" }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-center">
+                <div>
+                  <p className="text-xs text-slate-500">Total</p>
+                  <p className="mt-1 font-heading text-2xl tracking-tight text-slate-900">{formatRupiah(totalBudgetSplit)}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <ul className="mt-5 space-y-2 text-sm text-foreground-muted">
-            {categorySplit.map((item) => (
+          <ul className="mt-4 space-y-2 text-sm text-slate-600">
+            {budgetSplitData.map((item) => (
               <li key={item.label} className="flex items-center justify-between gap-3">
                 <span className="inline-flex items-center gap-2">
-                  <span className={`inline-block size-2.5 rounded-full ${item.tone}`} />
+                  <span className="inline-block size-2.5 rounded-full" style={{ backgroundColor: item.color }} />
                   {item.label}
                 </span>
-                <span className="font-medium text-foreground">{new Intl.NumberFormat("id-ID").format(item.amount)} views</span>
+                <span className="whitespace-nowrap font-medium tabular-nums text-slate-900">{formatRupiah(item.amount)}</span>
               </li>
             ))}
           </ul>
         </article>
+      </section>
 
-        <article className="umkm-analytics-bottom umkm-panel border border-border p-5">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">Campaign Transaction</h2>
-              <p className="text-sm text-foreground-subtle">Aktivitas transaksi campaign yang terhubung dengan status fraud review queue.</p>
-            </div>
-
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <select
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as "all" | "review" | "clear")}
-                className="min-h-10 border border-border bg-background px-3 text-sm text-foreground outline-none"
-              >
-                <option value="all">Filter: All</option>
-                <option value="review">Review</option>
-                <option value="clear">Clear</option>
-              </select>
-              <button
-                type="button"
-                onClick={() => setIsCompact((value) => !value)}
-                className="inline-flex min-h-10 items-center justify-center border border-border px-3 text-sm text-foreground transition-colors hover:bg-surface"
-              >
-                {isCompact ? "Normal" : "Compact"}
-              </button>
-              <button
-                type="button"
-                onClick={exportRows}
-                className="inline-flex min-h-10 items-center justify-center border border-border px-3 text-sm text-foreground transition-colors hover:bg-surface"
-              >
-                Export
-              </button>
-            </div>
+      <section className={`umkm-analytics-bottom ${panelClassName} p-5`}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Rincian Kampanye &amp; Kolaborasi</h2>
+            <p className="text-sm text-slate-600">Pantauan performa per pekerjaan untuk evaluasi efisiensi budget.</p>
           </div>
+        </div>
 
-          <div className="mt-4 hidden overflow-x-auto rounded-xl border border-border bg-background/80 md:block">
-            <table className="w-full min-w-[880px] border-collapse text-sm">
-              <thead className="bg-surface/70 text-left text-xs uppercase tracking-[0.08em] text-foreground-subtle">
-                <tr>
-                  <th className="px-4 py-3">Order ID</th>
-                  <th className="px-4 py-3">Nama Campaign</th>
-                  <th className="px-4 py-3">Creator</th>
-                  <th className="px-4 py-3">Tanggal Klaim</th>
-                  <th className="px-4 py-3">Budget</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRows.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-8 text-center text-sm text-foreground-muted">
-                      Tidak ada data transaksi untuk filter ini.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredRows.map((item) => (
-                    <tr key={item.id} className="umkm-analytics-transaction-row border-t border-border/70">
-                      <td className={`px-4 font-label text-[10px] tracking-[0.12em] text-foreground ${isCompact ? "py-2" : "py-3"}`}>{item.orderId}</td>
-                      <td className={`${isCompact ? "py-2" : "py-3"} px-4 text-foreground`}>{item.campaignName}</td>
-                      <td className={`${isCompact ? "py-2" : "py-3"} px-4 text-foreground-muted`}>
-                        <span className="text-foreground">{item.creatorName}</span>
-                        <span className="ml-1 text-xs text-foreground-subtle">{item.creatorHandle}</span>
-                      </td>
-                      <td className={`${isCompact ? "py-2" : "py-3"} px-4 text-foreground-muted`}>{item.claimDate}</td>
-                      <td className={`${isCompact ? "py-2" : "py-3"} px-4 font-medium text-foreground`}>{formatRupiah(item.budget)}</td>
-                      <td className={`${isCompact ? "py-2" : "py-3"} px-4`}>
-                        <span
-                          className={`inline-flex min-h-7 items-center rounded-md px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${
-                            item.status === "clear" ? "bg-[#e7f7eb] text-[#238247]" : "bg-[#ffeaea] text-[#b63939]"
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className={`${isCompact ? "py-2" : "py-3"} px-4`}>
-                        <button
-                          type="button"
-                          className="inline-flex min-h-8 items-center rounded-md border border-border px-3 text-xs text-foreground transition-colors hover:bg-surface"
-                        >
-                          Review
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-4 space-y-3 md:hidden">
-            {filteredRows.length === 0 ? (
-              <article className="rounded-xl border border-border bg-background px-4 py-6 text-center text-sm text-foreground-muted">
-                Tidak ada data transaksi untuk filter ini.
-              </article>
-            ) : (
-              filteredRows.map((item) => (
-                <article key={item.id} className="umkm-analytics-transaction-row rounded-xl border border-border bg-background p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-label text-[10px] tracking-[0.12em] text-foreground-subtle">{item.orderId}</p>
-                      <h3 className="mt-1 text-sm font-medium text-foreground">{item.campaignName}</h3>
-                    </div>
-                    <span
-                      className={`inline-flex min-h-7 items-center rounded-md px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${
-                        item.status === "clear" ? "bg-[#e7f7eb] text-[#238247]" : "bg-[#ffeaea] text-[#b63939]"
-                      }`}
-                    >
-                      {item.status}
+        <div className="mt-4 hidden overflow-x-auto rounded-xl border border-[#dbe3ee] bg-white md:block">
+          <table className="w-full min-w-[860px] border-collapse text-sm">
+            <thead className="bg-[#f7f9fc] text-left text-xs uppercase tracking-[0.07em] text-slate-500">
+              <tr>
+                <th className="px-4 py-3">Nama Pekerjaan/Kampanye</th>
+                <th className="px-4 py-3">Mode</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Pengeluaran</th>
+                <th className="px-4 py-3">Views Didapat</th>
+                <th className="px-4 py-3">ROAS / CPV</th>
+              </tr>
+            </thead>
+            <tbody>
+              {performanceRows.map((item) => (
+                <tr key={item.id} className="umkm-analytics-transaction-row border-t border-[#e8edf3] odd:bg-white even:bg-[#fbfcfe]">
+                  <td className="px-4 py-3 font-medium text-slate-900">{item.campaignName}</td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex min-h-7 items-center rounded-md border border-[#dce8ff] bg-[#edf3ff] px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] text-[#2147a8]">
+                      {formatModeLabel(item.mode)}
                     </span>
-                  </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex min-h-7 items-center rounded-md border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${statusBadgeClass(item.status)}`}>
+                      {item.status === "menunggu-escrow" ? "Menunggu Escrow" : item.status === "berjalan" ? "Berjalan" : "Selesai"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 font-medium text-slate-900">{formatRupiah(item.spend)}</td>
+                  <td className="px-4 py-3 text-slate-700">{formatNumber(item.views)} Views</td>
+                  <td className="px-4 py-3 text-slate-700">ROAS {item.roas.toFixed(2)}x | CPV {formatRupiah(Math.round(item.cpv))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-                  <div className="mt-3 space-y-1.5 text-sm text-foreground-muted">
-                    <p>
-                      Creator: <span className="text-foreground">{item.creatorName}</span> <span className="text-foreground-subtle">{item.creatorHandle}</span>
-                    </p>
-                    <p>
-                      Tanggal Klaim: <span className="text-foreground">{item.claimDate}</span>
-                    </p>
-                    <p>
-                      Budget: <span className="font-medium text-foreground">{formatRupiah(item.budget)}</span>
-                    </p>
-                  </div>
+        <div className="mt-4 space-y-3 md:hidden">
+          {performanceRows.map((item) => (
+            <article key={item.id} className="umkm-analytics-transaction-row rounded-xl border border-[#dbe3ee] bg-white p-4">
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="text-sm font-medium text-slate-900">{item.campaignName}</h3>
+                <span className={`inline-flex min-h-7 items-center rounded-md border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${statusBadgeClass(item.status)}`}>
+                  {item.status === "menunggu-escrow" ? "Menunggu Escrow" : item.status === "berjalan" ? "Berjalan" : "Selesai"}
+                </span>
+              </div>
 
-                  <button
-                    type="button"
-                    className="mt-3 inline-flex min-h-9 items-center rounded-md border border-border px-3 text-xs text-foreground transition-colors hover:bg-surface"
-                  >
-                    Review
-                  </button>
-                </article>
-              ))
-            )}
-          </div>
-        </article>
+              <div className="mt-3 flex items-center justify-between gap-2 text-xs">
+                <span className="inline-flex min-h-7 items-center rounded-md border border-[#dce8ff] bg-[#edf3ff] px-2.5 font-medium uppercase tracking-[0.08em] text-[#2147a8]">
+                  {formatModeLabel(item.mode)}
+                </span>
+                <span className="text-slate-500">{formatNumber(item.views)} Views</span>
+              </div>
+
+              <div className="mt-3 space-y-1.5 text-sm text-slate-600">
+                <p>
+                  Pengeluaran: <span className="font-medium text-slate-900">{formatRupiah(item.spend)}</span>
+                </p>
+                <p>
+                  ROAS / CPV: <span className="text-slate-900">{item.roas.toFixed(2)}x / {formatRupiah(Math.round(item.cpv))}</span>
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     </div>
   );
