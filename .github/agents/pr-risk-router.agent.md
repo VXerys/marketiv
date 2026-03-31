@@ -1,6 +1,6 @@
 ---
 name: PR Risk Router Agent
-description: "Use when triaging pull requests with mixed risk (animation, data layer, dashboard flow) to route work to the right specialist agent and reduce wrong-agent selection. Keywords: pr triage, risk router, mixed scope pr, animation data dashboard, agent dispatch."
+description: "Use when triaging pull requests (PR URL, diff summary, changed files) with mixed risk across animation, data layer, and dashboard flow; route PR work to the right specialist sequence. Not for general non-PR requests. Keywords: pull request triage, pr router, changed files, mixed risk pr, agent dispatch."
 tools: [read, search, agent]
 argument-hint: "Jelaskan scope PR, file area yang berubah, dan gejala risiko yang terlihat."
 user-invocable: true

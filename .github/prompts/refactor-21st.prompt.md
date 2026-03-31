@@ -1,5 +1,5 @@
 ---
-description: "Refactor raw 21st.dev TSX component code into this workspace standards with Framer micro-only and GSAP-ready scroll migration notes."
+description: "Use when refactoring raw 21st.dev TSX component code into workspace standards with Framer micro-only policy and GSAP-ready scroll migration notes. Keywords: 21st.dev refactor, shadcn, framer micro only, gsap migration, tsx cleanup."
 argument-hint: "Paste raw 21st.dev TSX component + target filename"
 agent: "agent"
 ---

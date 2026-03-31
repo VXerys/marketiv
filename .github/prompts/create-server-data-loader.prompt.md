@@ -1,5 +1,5 @@
 ---
-description: "Create a server-first Next.js App Router data loader using Supabase or GitHub GraphQL with explicit cache strategy and typed response mapping."
+description: "Use when creating a server-first Next.js App Router data loader with Supabase or GitHub GraphQL, explicit cache strategy, and typed response mapping. Keywords: server data loader, app router fetch, supabase, graphql, revalidate, no-store."
 argument-hint: "Data source + entity + freshness requirement"
 agent: "agent"
 ---

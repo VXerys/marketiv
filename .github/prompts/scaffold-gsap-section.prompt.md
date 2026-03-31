@@ -1,5 +1,5 @@
 ---
-description: "Generate a memory-safe GSAP ScrollTrigger React/Next.js TSX scaffold that follows workspace standards and Lenis-compatible structure."
+description: "Use when scaffolding a memory-safe GSAP ScrollTrigger React/Next.js TSX section that follows workspace standards and Lenis-compatible structure. Keywords: gsap scaffold, scrolltrigger, usegsap, lenis, animation starter."
 argument-hint: "Component name + short section purpose"
 agent: "agent"
 ---

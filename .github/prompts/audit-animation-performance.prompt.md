@@ -1,5 +1,5 @@
 ---
-description: "Audit a Next.js/React animated component for memory leaks and jank, then return RCA, action plan, and refactored code fix."
+description: "Use when auditing a Next.js/React animated component for memory leaks, frame drops, and GSAP lifecycle risks, then return RCA, action plan, and code fix. Keywords: animation audit, gsap safety, jank, memory leak, rca."
 argument-hint: "Paste component code or file path to audit"
 agent: "agent"
 ---

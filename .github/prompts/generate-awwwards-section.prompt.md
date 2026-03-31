@@ -1,5 +1,5 @@
 ---
-description: "Generate a premium Awwwards-style portfolio section for Next.js App Router with server-first architecture and GSAP-ready interaction boundaries."
+description: "Use when generating a premium Awwwards-style portfolio section for Next.js App Router with server-first architecture and GSAP-ready interaction boundaries. Keywords: awwwards section, portfolio section, app router, gsap, server-first."
 argument-hint: "Section name + purpose + visual direction"
 agent: "agent"
 ---
