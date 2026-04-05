@@ -21,5 +21,53 @@ export function animateCreatorSection(section: HTMLElement | null): void {
     )
     .from(".creator-cta", { y: 14, opacity: 0, duration: 0.35 }, "-=0.15")
     .from(".creator-visual", { scale: 0.97, opacity: 0, duration: 0.55 }, "-=0.25")
+    .from(".creator-ui-orb", { scale: 0.82, opacity: 0, duration: 0.42 }, "-=0.26")
+    .from(
+      ".creator-ui-tag",
+      { y: 14, opacity: 0, duration: 0.34, stagger: 0.08 },
+      "-=0.24"
+    )
+    .from(
+      ".creator-ui-card",
+      { y: 18, opacity: 0, duration: 0.4, stagger: 0.09 },
+      "-=0.25"
+    )
     .from(".creator-metric-card", { x: 24, opacity: 0, duration: 0.45 }, "-=0.2");
+
+  if (section && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const floatCards = section.querySelectorAll<HTMLElement>(".creator-ui-float");
+
+    if (floatCards.length > 0) {
+      gsap.to(floatCards, {
+        y: -6,
+        duration: 2.7,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: {
+          each: 0.2,
+          from: "center",
+        },
+      });
+    }
+
+    const floatingTags = section.querySelectorAll<HTMLElement>(".creator-ui-tag-float");
+
+    if (floatingTags.length > 0) {
+      floatingTags.forEach((tag) => {
+        const floatDistance = gsap.utils.random(10, 15);
+        const floatDuration = gsap.utils.random(2.8, 4.1);
+        const randomDelay = gsap.utils.random(0, 1.2);
+
+        gsap.to(tag, {
+          y: -floatDistance,
+          duration: floatDuration,
+          delay: randomDelay,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      });
+    }
+  }
 }
