@@ -12,8 +12,8 @@ interface GuideStep {
   objective: string;
   description: string;
   checklist: string[];
-  counterpartyLabel: string;
-  counterpartyChecklist: string[];
+  counterpartyLabel?: string;
+  counterpartyChecklist?: string[];
   image: {
     src: string;
     alt: string;
@@ -422,9 +422,11 @@ export function OnboardingGuideTemplate({
                     </ul>
 
                     <div className="mt-5 border-t border-border pt-4">
-                      <p className="font-label text-[9px] tracking-[0.2em] text-foreground-subtle">POV {step.counterpartyLabel}</p>
+                      <p className="font-label text-[9px] tracking-[0.2em] text-foreground-subtle">
+                        POV {step.counterpartyLabel ?? "MITRA KOLABORASI"}
+                      </p>
                       <ul className="mt-3 space-y-2 text-sm text-foreground-muted">
-                        {step.counterpartyChecklist.map((point) => (
+                        {(step.counterpartyChecklist ?? step.checklist).map((point) => (
                           <li key={point} className="flex items-start gap-2.5">
                             <span aria-hidden="true" className="mt-[7px] inline-block size-[5px] bg-foreground" />
                             <span className="break-words">{point}</span>
