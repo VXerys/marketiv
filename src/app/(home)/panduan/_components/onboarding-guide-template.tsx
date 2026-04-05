@@ -3,6 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import {
+  ReleaseTimeLine,
+  type ReleaseTimelineItem,
+} from "@/components/ui/release-time-line";
 import { createSectionScrollTrigger } from "@/lib/animations/scroll-configs";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
@@ -27,6 +31,12 @@ interface OnboardingGuideTemplateProps {
   title: string;
   subtitle: string;
   keyPillars: string[];
+  timeline?: {
+    label: string;
+    title: string;
+    subtitle: string;
+    items: ReleaseTimelineItem[];
+  };
   steps: GuideStep[];
   primaryCta: {
     label: string;
@@ -45,6 +55,7 @@ export function OnboardingGuideTemplate({
   title,
   subtitle,
   keyPillars,
+  timeline,
   steps,
   primaryCta,
 }: OnboardingGuideTemplateProps) {
@@ -277,6 +288,16 @@ export function OnboardingGuideTemplate({
           </div>
         </div>
       </section>
+
+      {timeline && timeline.items.length > 0 ? (
+        <ReleaseTimeLine
+          className="guide-release-timeline"
+          label={timeline.label}
+          title={timeline.title}
+          subtitle={timeline.subtitle}
+          items={timeline.items}
+        />
+      ) : null}
 
       <section>
         <div

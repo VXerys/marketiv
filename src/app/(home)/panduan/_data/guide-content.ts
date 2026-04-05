@@ -4,11 +4,36 @@ export interface GuideStep {
   objective: string;
   description: string;
   checklist: string[];
+  counterpartyLabel?: string;
+  counterpartyChecklist?: string[];
   image: {
     src: string;
     alt: string;
     badge: string;
   };
+}
+
+export type GuideTimelineStatus = "completed" | "in-progress" | "planned";
+
+export interface GuideTimelineItem {
+  id: string;
+  phase: string;
+  title: string;
+  description: string;
+  dateLabel: string;
+  status: GuideTimelineStatus;
+  highlights?: string[];
+  cta?: {
+    label: string;
+    href: string;
+  };
+}
+
+export interface GuideTimeline {
+  label: string;
+  title: string;
+  subtitle: string;
+  items: GuideTimelineItem[];
 }
 
 export interface GuidePageContent {
@@ -17,6 +42,7 @@ export interface GuidePageContent {
   title: string;
   subtitle: string;
   keyPillars: string[];
+  timeline?: GuideTimeline;
   primaryCta: {
     label: string;
     href: string;
@@ -36,6 +62,70 @@ export const creatorGuideContent: GuidePageContent = {
     "Produksi konten dengan checklist quality gate",
     "Monitoring performa real-time untuk repeat campaign",
   ],
+  timeline: {
+    label: "RELEASE TIMELINE KREATOR",
+    title: "ROADMAP ONBOARDING KONTEN",
+    subtitle:
+      "Timeline ini membantu kreator melihat urutan aktivasi fitur dari setup awal sampai fase scale campaign secara bertahap.",
+    items: [
+      {
+        id: "creator-t-01",
+        phase: "PHASE 01",
+        title: "Profile Setup",
+        description:
+          "Lengkapi identitas niche, referensi visual, dan preferensi campaign agar matchmaking awal lebih presisi.",
+        dateLabel: "WEEK 1",
+        status: "completed",
+        highlights: [
+          "Niche dan lokasi operasional tervalidasi",
+          "Portofolio minimum 3 konten aktif",
+        ],
+      },
+      {
+        id: "creator-t-02",
+        phase: "PHASE 02",
+        title: "AI Brief Sync",
+        description:
+          "Sinkronisasi tone dan output konten dengan brief otomatis supaya proses approval lebih cepat.",
+        dateLabel: "WEEK 2",
+        status: "in-progress",
+        highlights: [
+          "Brief objective dan CTA konsisten",
+          "Rule revisi campaign lebih jelas",
+        ],
+      },
+      {
+        id: "creator-t-03",
+        phase: "PHASE 03",
+        title: "Draft and Approval",
+        description:
+          "Upload draft dengan quality checklist dan terima feedback UMKM dalam satu alur terpusat.",
+        dateLabel: "WEEK 3",
+        status: "planned",
+        highlights: [
+          "Tracking status approval real-time",
+          "Escrow milestone siap ditautkan",
+        ],
+      },
+      {
+        id: "creator-t-04",
+        phase: "PHASE 04",
+        title: "Performance Loop",
+        description:
+          "Pantau performa tervalidasi untuk membuka peluang repeat campaign dengan brand yang relevan.",
+        dateLabel: "WEEK 4+",
+        status: "planned",
+        highlights: [
+          "Panel insights per konten",
+          "Notifikasi peluang repeat campaign",
+        ],
+        cta: {
+          label: "AKTIFKAN AKUN KREATOR",
+          href: "/register/kreator",
+        },
+      },
+    ],
+  },
   primaryCta: {
     label: "LANJUT BUAT AKUN KREATOR",
     href: "/register/kreator",
@@ -124,6 +214,70 @@ export const umkmGuideContent: GuidePageContent = {
     "Kelola escrow serta approval konten dengan aman",
     "Evaluasi ROI dari data performa tervalidasi",
   ],
+  timeline: {
+    label: "RELEASE TIMELINE UMKM",
+    title: "ROADMAP EKSEKUSI CAMPAIGN",
+    subtitle:
+      "Alur rilis ini merangkum tahapan UMKM dari setup campaign sampai optimasi ROI agar deployment campaign lebih terukur.",
+    items: [
+      {
+        id: "umkm-t-01",
+        phase: "PHASE 01",
+        title: "Campaign Setup",
+        description:
+          "Susun objective, budget, dan target market untuk membentuk baseline rekomendasi kreator yang akurat.",
+        dateLabel: "WEEK 1",
+        status: "completed",
+        highlights: [
+          "Objective campaign tervalidasi",
+          "Budget dan durasi sudah terstruktur",
+        ],
+      },
+      {
+        id: "umkm-t-02",
+        phase: "PHASE 02",
+        title: "AI Brief Builder",
+        description:
+          "Generate brief kreatif berbasis produk dan style brand agar semua kreator menerima arahan yang seragam.",
+        dateLabel: "WEEK 2",
+        status: "in-progress",
+        highlights: [
+          "Template brief siap publish",
+          "CTA dan key message lebih konsisten",
+        ],
+      },
+      {
+        id: "umkm-t-03",
+        phase: "PHASE 03",
+        title: "Escrow and Approval",
+        description:
+          "Aktifkan escrow dan approval workflow untuk menjaga pembayaran tetap aman sesuai milestone hasil.",
+        dateLabel: "WEEK 3",
+        status: "planned",
+        highlights: [
+          "Progress review per draft konten",
+          "Release dana sesuai validasi target",
+        ],
+      },
+      {
+        id: "umkm-t-04",
+        phase: "PHASE 04",
+        title: "ROI Optimization",
+        description:
+          "Pantau cost efficiency dan conversion untuk menentukan campaign mana yang layak di-scale.",
+        dateLabel: "WEEK 4+",
+        status: "planned",
+        highlights: [
+          "Perbandingan performa kreator per niche",
+          "Rekomendasi skala campaign berbasis data",
+        ],
+        cta: {
+          label: "AKTIFKAN AKUN UMKM",
+          href: "/register/umkm",
+        },
+      },
+    ],
+  },
   primaryCta: {
     label: "LANJUT BUAT AKUN UMKM",
     href: "/register/umkm",
