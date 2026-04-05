@@ -13,6 +13,7 @@ export const DASHBOARD_ROUTES = {
   creator: {
     overview: "/dashboard/creator",
     jobs: "/dashboard/creator/jobs",
+    submissions: "/dashboard/creator/submissions",
     portfolio: "/dashboard/creator/portfolio",
     earnings: "/dashboard/creator/earnings",
   },
@@ -31,9 +32,10 @@ export const umkmDashboardNav: DashboardNavItem[] = [
 
 export const creatorDashboardNav: DashboardNavItem[] = [
   { label: "Overview", href: DASHBOARD_ROUTES.creator.overview },
-  { label: "Jobs", href: DASHBOARD_ROUTES.creator.jobs },
-  { label: "Portfolio", href: DASHBOARD_ROUTES.creator.portfolio },
+  { label: "Job Board", href: DASHBOARD_ROUTES.creator.jobs },
+  { label: "Submissions", href: DASHBOARD_ROUTES.creator.submissions },
   { label: "Earnings", href: DASHBOARD_ROUTES.creator.earnings },
+  { label: "Portfolio", href: DASHBOARD_ROUTES.creator.portfolio },
 ];
 
 export const sharedDashboardNav: DashboardNavItem[] = [

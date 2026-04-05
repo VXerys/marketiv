@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CreatorJobBoard } from "@/components/dashboard/creator/creator-job-board";
+import { creatorDashboardMock } from "@/data/dashboard/creator-mock";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -11,12 +13,5 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function CreatorJobsPage() {
-  return (
-    <div>
-      <h1 className="font-heading text-4xl tracking-tight">Peluang Campaign</h1>
-      <p className="mt-3 max-w-xl text-foreground-muted">
-        Kurasi daftar campaign aktif berdasarkan niche dan kapasitasmu untuk meningkatkan peluang deal yang relevan.
-      </p>
-    </div>
-  );
+  return <CreatorJobBoard jobs={creatorDashboardMock.jobs} />;
 }

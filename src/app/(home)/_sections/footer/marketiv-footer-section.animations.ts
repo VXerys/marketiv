@@ -17,6 +17,7 @@ export function animateFooterSection(section: HTMLElement | null): void {
       "-=0.18"
     )
     .from(".footer-cta", { y: 16, opacity: 0, duration: 0.4, stagger: 0.08 }, "-=0.2")
+    .from(".footer-brand-stack", { yPercent: 18, opacity: 0, duration: 0.52 }, "-=0.16")
     .from(
       ".footer-main-divider",
       { scaleX: 0, duration: 0.45, transformOrigin: "left center" },

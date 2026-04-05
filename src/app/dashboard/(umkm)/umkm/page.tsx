@@ -13,5 +13,13 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function UmkmDashboardPage() {
-  return <UmkmOverview metrics={umkmDashboardMock.metrics} quickActions={umkmDashboardMock.quickActions} campaigns={umkmDashboardMock.campaigns} />;
+  return (
+    <UmkmOverview
+      metrics={umkmDashboardMock.metrics}
+      quickActions={umkmDashboardMock.quickActions}
+      campaigns={umkmDashboardMock.campaigns}
+      escrowOrders={umkmDashboardMock.escrowOrders}
+      fraudQueue={umkmDashboardMock.fraudQueue}
+    />
+  );
 }

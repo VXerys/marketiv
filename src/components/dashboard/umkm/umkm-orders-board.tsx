@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { AlertTriangle, CircleCheckBig, Clock3, Landmark, PackageCheck, Wallet } from "lucide-react";
 import { useGSAP } from "@/lib/gsap";
 import type { UmkmEscrowOrderItem } from "@/types/dashboard";
 import { animateUmkmOrdersBoard } from "./umkm-orders-board.animations";
@@ -32,6 +33,34 @@ function formatRupiah(value: number): string {
 
 function csvEscape(value: string): string {
   return `"${value.replace(/"/g, '""')}"`;
+}
+
+function getSlaTone(order: UmkmEscrowOrderItem): {
+  label: string;
+  className: string;
+  rowClassName: string;
+} {
+  if (order.submissionStatus === "disputed") {
+    return {
+      label: "Urgent",
+      className: "bg-[#ffeaea] text-[#b63939] border-[#f4caca]",
+      rowClassName: "bg-[#fffbfb]",
+    };
+  }
+
+  if (order.submissionStatus === "submitted") {
+    return {
+      label: "On Review",
+      className: "bg-[#fff4dc] text-[#9c6b00] border-[#f0ddb5]",
+      rowClassName: "bg-[#fffdf8]",
+    };
+  }
+
+  return {
+    label: "Stable",
+    className: "bg-[#eefaf2] text-[#247a52] border-[#d2ebdc]",
+    rowClassName: "bg-transparent",
+  };
 }
 
 export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
@@ -94,6 +123,11 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
 
   const currentRowsStart = filteredOrders.length === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
   const currentRowsEnd = Math.min(currentPage * rowsPerPage, filteredOrders.length);
+  const stateBreakdown = {
+    processing: orders.filter((item) => item.escrowState === "processing").length,
+    shipped: orders.filter((item) => item.escrowState === "shipped").length,
+    released: orders.filter((item) => item.escrowState === "released").length,
+  };
 
   const handleRowsPerPageChange = (value: number) => {
     setRowsPerPage(value);
@@ -149,7 +183,7 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
 
   return (
     <div ref={rootRef} className="umkm-dashboard-space space-y-7">
-      <section className="umkm-orders-head umkm-panel border border-border p-6 md:p-8">
+      <section className="umkm-orders-head umkm-panel rounded-2xl border border-border p-6 md:p-8">
         <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">ESCROW OPERATIONS</p>
         <h1 className="mt-3 font-heading text-4xl tracking-tight md:text-5xl">Manajemen Order Campaign</h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-foreground-muted md:text-base">
@@ -157,30 +191,72 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <article className="umkm-orders-kpi umkm-panel border border-border p-5">
-          <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Total Campaign Orders</p>
+      <section className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article className="umkm-orders-kpi umkm-panel flex h-full flex-col rounded-2xl border border-border bg-gradient-to-br from-[#eef4ff] to-white p-5">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Total Campaign Orders</p>
+            <PackageCheck className="size-4 text-[#1d4ed8]" aria-hidden="true" />
+          </div>
           <p className="mt-3 font-heading text-4xl tracking-tight">{summary.totalOrders}</p>
-          <p className="mt-2 text-xs text-foreground-muted">Semua order campaign aktif + histori</p>
+          <p className="mt-auto pt-2 text-xs text-foreground-muted">Semua order campaign aktif + histori</p>
         </article>
-        <article className="umkm-orders-kpi umkm-panel border border-border p-5">
-          <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Total Escrow Budget</p>
+        <article className="umkm-orders-kpi umkm-panel flex h-full flex-col rounded-2xl border border-border bg-gradient-to-br from-[#f6f1ff] to-white p-5">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Total Escrow Budget</p>
+            <Landmark className="size-4 text-[#5a3da8]" aria-hidden="true" />
+          </div>
           <p className="mt-3 font-heading text-4xl tracking-tight">{formatRupiah(summary.totalEscrow)}</p>
-          <p className="mt-2 text-xs text-foreground-muted">Akumulasi budget yang dikelola</p>
+          <p className="mt-auto pt-2 text-xs text-foreground-muted">Akumulasi budget yang dikelola</p>
         </article>
-        <article className="umkm-orders-kpi umkm-panel border border-border p-5">
-          <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Pending Validation</p>
+        <article className="umkm-orders-kpi umkm-panel flex h-full flex-col rounded-2xl border border-border bg-gradient-to-br from-[#fff9ee] to-white p-5">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Pending Validation</p>
+            <Clock3 className="size-4 text-[#9c6b00]" aria-hidden="true" />
+          </div>
           <p className="mt-3 font-heading text-4xl tracking-tight">{summary.pendingValidation}</p>
-          <p className="mt-2 text-xs text-foreground-muted">Submission menunggu validasi</p>
+          <p className="mt-auto pt-2 text-xs text-foreground-muted">Submission menunggu validasi</p>
         </article>
-        <article className="umkm-orders-kpi umkm-panel border border-border p-5">
-          <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Disputed Submission</p>
+        <article className="umkm-orders-kpi umkm-panel flex h-full flex-col rounded-2xl border border-border bg-gradient-to-br from-[#fff3f3] to-white p-5">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">Disputed Submission</p>
+            <AlertTriangle className="size-4 text-[#b63939]" aria-hidden="true" />
+          </div>
           <p className="mt-3 font-heading text-4xl tracking-tight">{summary.disputed}</p>
-          <p className="mt-2 text-xs text-foreground-muted">Membutuhkan review manual</p>
+          <p className="mt-auto pt-2 text-xs text-foreground-muted">Membutuhkan review manual</p>
         </article>
       </section>
 
-      <section className="umkm-orders-table umkm-panel border border-border p-4 md:p-6">
+      <section className="umkm-orders-kpi umkm-panel rounded-2xl border border-border p-4 md:p-5">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-heading text-2xl tracking-tight md:text-3xl">Ops Radar</h2>
+          <span className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">ESCROW PIPELINE</span>
+        </div>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <article className="rounded-xl border border-border bg-[#eef5ff] px-4 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">Processing</p>
+              <Wallet className="size-4 text-[#2f5f8a]" aria-hidden="true" />
+            </div>
+            <p className="mt-2 font-heading text-3xl tracking-tight text-foreground">{stateBreakdown.processing}</p>
+          </article>
+          <article className="rounded-xl border border-border bg-[#f4f0ff] px-4 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">Shipped</p>
+              <PackageCheck className="size-4 text-[#5a3da8]" aria-hidden="true" />
+            </div>
+            <p className="mt-2 font-heading text-3xl tracking-tight text-foreground">{stateBreakdown.shipped}</p>
+          </article>
+          <article className="rounded-xl border border-border bg-[#eefaf2] px-4 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">Released</p>
+              <CircleCheckBig className="size-4 text-[#247a52]" aria-hidden="true" />
+            </div>
+            <p className="mt-2 font-heading text-3xl tracking-tight text-foreground">{stateBreakdown.released}</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="umkm-orders-table umkm-panel rounded-2xl border border-border p-4 md:p-6">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="font-heading text-3xl tracking-tight">Campaign Orders</h2>
@@ -188,7 +264,7 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-            <label className="inline-flex min-h-10 w-full items-center gap-2 border border-border bg-background px-3 text-sm text-foreground-muted sm:w-[300px]">
+            <label className="inline-flex min-h-10 w-full items-center gap-2 rounded-xl border border-border bg-background px-3 text-sm text-foreground-muted sm:w-[300px]">
               <span>Cari</span>
               <input
                 value={searchTerm}
@@ -201,7 +277,7 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
             <select
               value={statusFilter}
               onChange={(event) => handleFilterChange(event.target.value as "all" | UmkmEscrowOrderItem["escrowState"])}
-              className="min-h-10 w-full border border-border bg-background px-3 text-sm text-foreground outline-none sm:w-auto"
+              className="min-h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none sm:w-auto"
             >
               <option value="all">Status: All</option>
               <option value="processing">Processing</option>
@@ -212,7 +288,7 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
             <button
               type="button"
               onClick={exportCurrentRows}
-              className="inline-flex min-h-10 w-full items-center justify-center border border-border px-3 font-label text-[10px] tracking-[0.14em] text-foreground transition-colors hover:bg-surface sm:w-auto"
+              className="inline-flex min-h-10 w-full items-center justify-center rounded-xl border border-border px-3 font-label text-[10px] tracking-[0.14em] text-foreground transition-colors hover:bg-surface sm:w-auto"
             >
               EXPORT
             </button>
@@ -232,51 +308,61 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
                 <th className="px-4 py-3">Views</th>
                 <th className="px-4 py-3">Submission</th>
                 <th className="px-4 py-3">Order Status</th>
+                <th className="px-4 py-3">SLA</th>
                 <th className="px-4 py-3">Action</th>
               </tr>
             </thead>
             <tbody>
               {paginatedOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="px-4 py-8 text-center text-sm text-foreground-muted">
+                  <td colSpan={11} className="px-4 py-8 text-center text-sm text-foreground-muted">
                     Tidak ada order yang cocok dengan filter saat ini.
                   </td>
                 </tr>
               ) : (
-                paginatedOrders.map((order) => (
-                  <tr key={order.id} className="umkm-orders-row border-t border-border/80 align-top text-foreground-muted">
-                    <td className="px-4 py-3 font-label text-[10px] tracking-[0.14em] text-foreground">{order.id}</td>
-                    <td className="px-4 py-3">
-                      <p className="font-medium text-foreground">{order.campaignTitle}</p>
-                    </td>
-                    <td className="px-4 py-3">{order.claimDate}</td>
-                    <td className="px-4 py-3">
-                      <p className="text-foreground">{order.creatorName}</p>
-                      <p className="text-xs text-foreground-subtle">{order.creatorHandle}</p>
-                    </td>
-                    <td className="px-4 py-3">{order.paymentMethod}</td>
-                    <td className="px-4 py-3 font-medium text-foreground">{formatRupiah(order.escrowAmount)}</td>
-                    <td className="px-4 py-3">{order.viewsProgress}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${submissionToneMap[order.submissionStatus]}`}>
-                        {order.submissionStatus}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${escrowToneMap[order.escrowState]}`}>
-                        {order.escrowState}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        type="button"
-                        className="inline-flex min-h-8 items-center border border-border px-3 font-label text-[10px] tracking-[0.12em] text-foreground transition-colors hover:bg-surface"
-                      >
-                        REVIEW
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                paginatedOrders.map((order) => {
+                  const slaTone = getSlaTone(order);
+
+                  return (
+                    <tr key={order.id} className={`umkm-orders-row border-t border-border/80 align-top text-foreground-muted ${slaTone.rowClassName}`}>
+                      <td className="px-4 py-3 font-label text-[10px] tracking-[0.14em] text-foreground">{order.id}</td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-foreground">{order.campaignTitle}</p>
+                      </td>
+                      <td className="px-4 py-3">{order.claimDate}</td>
+                      <td className="px-4 py-3">
+                        <p className="text-foreground">{order.creatorName}</p>
+                        <p className="text-xs text-foreground-subtle">{order.creatorHandle}</p>
+                      </td>
+                      <td className="px-4 py-3">{order.paymentMethod}</td>
+                      <td className="px-4 py-3 font-medium text-foreground">{formatRupiah(order.escrowAmount)}</td>
+                      <td className="px-4 py-3">{order.viewsProgress}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${submissionToneMap[order.submissionStatus]}`}>
+                          {order.submissionStatus}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${escrowToneMap[order.escrowState]}`}>
+                          {order.escrowState}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex min-h-7 items-center rounded-full border px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${slaTone.className}`}>
+                          {slaTone.label}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          type="button"
+                          className="inline-flex min-h-8 items-center border border-border px-3 font-label text-[10px] tracking-[0.12em] text-foreground transition-colors hover:bg-surface"
+                        >
+                          REVIEW
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -288,49 +374,56 @@ export function UmkmOrdersBoard({ orders }: UmkmOrdersBoardProps) {
               Tidak ada order yang cocok dengan filter saat ini.
             </article>
           ) : (
-            paginatedOrders.map((order) => (
-              <article key={order.id} className="umkm-orders-row rounded-xl border border-border bg-background p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">{order.id}</p>
-                    <h3 className="mt-1 font-medium text-foreground">{order.campaignTitle}</h3>
+            paginatedOrders.map((order) => {
+              const slaTone = getSlaTone(order);
+
+              return (
+                <article key={order.id} className={`umkm-orders-row rounded-xl border border-border bg-background p-4 ${slaTone.rowClassName}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">{order.id}</p>
+                      <h3 className="mt-1 font-medium text-foreground">{order.campaignTitle}</h3>
+                    </div>
+                    <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${escrowToneMap[order.escrowState]}`}>
+                      {order.escrowState}
+                    </span>
                   </div>
-                  <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${escrowToneMap[order.escrowState]}`}>
-                    {order.escrowState}
-                  </span>
-                </div>
 
-                <div className="mt-3 space-y-1.5 text-sm text-foreground-muted">
-                  <p>
-                    Creator: <span className="text-foreground">{order.creatorName}</span> <span className="text-foreground-subtle">({order.creatorHandle})</span>
-                  </p>
-                  <p>
-                    Claim Date: <span className="text-foreground">{order.claimDate}</span>
-                  </p>
-                  <p>
-                    Payment: <span className="text-foreground">{order.paymentMethod}</span>
-                  </p>
-                  <p>
-                    Escrow: <span className="font-medium text-foreground">{formatRupiah(order.escrowAmount)}</span>
-                  </p>
-                  <p>
-                    Views: <span className="text-foreground">{order.viewsProgress}</span>
-                  </p>
-                </div>
+                  <div className="mt-3 space-y-1.5 text-sm text-foreground-muted">
+                    <p>
+                      Creator: <span className="text-foreground">{order.creatorName}</span> <span className="text-foreground-subtle">({order.creatorHandle})</span>
+                    </p>
+                    <p>
+                      Claim Date: <span className="text-foreground">{order.claimDate}</span>
+                    </p>
+                    <p>
+                      Payment: <span className="text-foreground">{order.paymentMethod}</span>
+                    </p>
+                    <p>
+                      Escrow: <span className="font-medium text-foreground">{formatRupiah(order.escrowAmount)}</span>
+                    </p>
+                    <p>
+                      Views: <span className="text-foreground">{order.viewsProgress}</span>
+                    </p>
+                  </div>
 
-                <div className="mt-3 flex items-center justify-between gap-2">
-                  <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${submissionToneMap[order.submissionStatus]}`}>
-                    {order.submissionStatus}
-                  </span>
-                  <button
-                    type="button"
-                    className="inline-flex min-h-8 items-center border border-border px-3 font-label text-[10px] tracking-[0.12em] text-foreground transition-colors hover:bg-surface"
-                  >
-                    REVIEW
-                  </button>
-                </div>
-              </article>
-            ))
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    <span className={`inline-flex min-h-7 items-center px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${submissionToneMap[order.submissionStatus]}`}>
+                      {order.submissionStatus}
+                    </span>
+                    <span className={`inline-flex min-h-7 items-center rounded-full border px-2.5 font-label text-[10px] tracking-[0.12em] uppercase ${slaTone.className}`}>
+                      {slaTone.label}
+                    </span>
+                    <button
+                      type="button"
+                      className="inline-flex min-h-8 items-center border border-border px-3 font-label text-[10px] tracking-[0.12em] text-foreground transition-colors hover:bg-surface"
+                    >
+                      REVIEW
+                    </button>
+                  </div>
+                </article>
+              );
+            })
           )}
         </div>
 

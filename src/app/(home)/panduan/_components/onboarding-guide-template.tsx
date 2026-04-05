@@ -12,6 +12,8 @@ interface GuideStep {
   objective: string;
   description: string;
   checklist: string[];
+  counterpartyLabel: string;
+  counterpartyChecklist: string[];
   image: {
     src: string;
     alt: string;
@@ -32,19 +34,10 @@ interface OnboardingGuideTemplateProps {
   };
 }
 
-const NAV_SHELL_TONES = [
-  "bg-surface/25 border-border",
-  "bg-surface/35 border-border",
-  "bg-surface/45 border-border-strong/20",
-  "bg-surface/55 border-border-strong/30",
-];
-
-const NAV_ITEM_ACTIVE_TONES = [
-  "bg-background border-border-strong/35 text-foreground",
-  "bg-surface/70 border-border-strong/45 text-foreground",
-  "bg-surface/80 border-border-strong/55 text-foreground",
-  "bg-surface/90 border-border-strong/60 text-foreground",
-];
+const NAV_SHELL_CLASS = "bg-surface/45 border-border-strong/35";
+const NAV_ITEM_ACTIVE_CLASS = "border-foreground/45 bg-surface/75 text-foreground";
+const NAV_ITEM_INACTIVE_CLASS =
+  "border-border bg-background text-foreground-muted motion-safe:hover:border-border-strong/45 motion-safe:hover:bg-surface/45 motion-safe:hover:text-foreground";
 
 export function OnboardingGuideTemplate({
   audienceLabel,
@@ -66,8 +59,6 @@ export function OnboardingGuideTemplate({
     steps.findIndex((step) => step.id === activeStepId)
   );
   const activeStep = steps[activeStepIndex] ?? steps[0];
-  const activeShellTone = NAV_SHELL_TONES[activeStepIndex % NAV_SHELL_TONES.length];
-  const activeItemTone = NAV_ITEM_ACTIVE_TONES[activeStepIndex % NAV_ITEM_ACTIVE_TONES.length];
 
   const handleStepJump = (stepId: string) => {
     const target = stepRefs.current[stepId];
@@ -268,7 +259,7 @@ export function OnboardingGuideTemplate({
             </div>
 
             <div
-              className={`guide-pillar-shell group border p-5 transition-[transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-border-strong/35 motion-safe:hover:bg-surface/55 ${activeShellTone}`}
+              className={`guide-pillar-shell group border p-5 transition-[transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-border-strong/35 motion-safe:hover:bg-surface/55 ${NAV_SHELL_CLASS}`}
             >
               <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">ALUR INTI</p>
               <ul className="mt-4 space-y-2.5 text-sm text-foreground-muted">
@@ -296,7 +287,7 @@ export function OnboardingGuideTemplate({
           }}
         >
           <aside
-            className={`hidden border p-5 transition-[background-color,border-color] duration-300 ease-quart-out motion-safe:hover:border-border-strong/35 motion-safe:hover:bg-surface/45 lg:sticky lg:top-28 lg:block lg:h-fit ${activeShellTone}`}
+            className={`hidden border p-5 transition-[background-color,border-color] duration-300 ease-quart-out motion-safe:hover:border-border-strong/35 motion-safe:hover:bg-surface/45 lg:sticky lg:top-28 lg:block lg:h-fit ${NAV_SHELL_CLASS}`}
           >
             <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">STEP NAV</p>
             <ol className="mt-4 space-y-3 text-sm text-foreground-muted">
@@ -309,10 +300,10 @@ export function OnboardingGuideTemplate({
                     type="button"
                     onClick={() => handleStepJump(step.id)}
                     aria-current={activeStepId === step.id ? "step" : undefined}
-                    className={`guide-nav-button inline-flex w-full items-start gap-3 border px-2 py-2 text-left transition-[transform,background-color,border-color,color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                    className={`guide-nav-button inline-flex min-h-14 w-full items-start gap-3 border px-2 py-2 text-left transition-[transform,background-color,border-color,color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                       activeStepId === step.id
-                        ? activeItemTone
-                        : "border-transparent bg-transparent text-foreground-muted motion-safe:hover:border-border-strong/30 motion-safe:hover:text-foreground"
+                        ? NAV_ITEM_ACTIVE_CLASS
+                        : NAV_ITEM_INACTIVE_CLASS
                     }`}
                   >
                     <span className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">{step.id}</span>
@@ -325,15 +316,18 @@ export function OnboardingGuideTemplate({
 
           <div
             ref={mobileNavRef}
-            className={`lg:hidden sticky top-0 z-20 border border-b-0 p-5 backdrop-blur transition-[background-color,border-color] duration-300 ease-quart-out ${activeShellTone}`}
+            className={`lg:hidden sticky top-0 z-20 border border-b-0 p-5 backdrop-blur transition-[background-color,border-color] duration-300 ease-quart-out ${NAV_SHELL_CLASS}`}
             style={{ top: "env(safe-area-inset-top)" }}
           >
             <div className="relative min-h-11 pr-14">
               <div className="min-w-0 max-w-[calc(100%-3.75rem)]">
                 <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">STEP NAV</p>
-                <p className="mt-1 block overflow-hidden text-ellipsis whitespace-nowrap text-sm text-foreground-muted">
-                  STEP {activeStep?.id}: {activeStep?.title}
-                </p>
+                <div className="mt-1 flex items-center gap-2.5">
+                  <span className="inline-flex min-h-6 min-w-14 items-center justify-center border border-border bg-background px-2 font-label text-[9px] tracking-[0.16em] text-foreground">
+                    STEP {activeStep?.id}
+                  </span>
+                  <p className="block overflow-hidden text-ellipsis whitespace-nowrap text-sm text-foreground-muted">{activeStep?.title}</p>
+                </div>
               </div>
 
               <button
@@ -342,7 +336,7 @@ export function OnboardingGuideTemplate({
                 aria-expanded={isMobileNavOpen}
                 aria-controls="guide-mobile-step-menu"
                 onClick={() => setIsMobileNavOpen((current) => !current)}
-                className="absolute right-0 top-0 inline-flex size-11 items-center justify-center border border-border bg-background/70 transition-[transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:border-border-strong/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="absolute right-0 top-0 inline-flex size-11 shrink-0 items-center justify-center border border-border bg-background/70 transition-[transform,border-color,background-color] duration-300 ease-quart-out motion-safe:hover:border-border-strong/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <span className="relative block h-4 w-5">
                   <span
@@ -378,10 +372,10 @@ export function OnboardingGuideTemplate({
                         type="button"
                         onClick={() => handleStepJump(step.id)}
                         aria-current={activeStepId === step.id ? "step" : undefined}
-                        className={`guide-nav-button inline-flex w-full items-start gap-2.5 border px-3 py-2.5 text-left transition-[transform,background-color,border-color,color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                        className={`guide-nav-button inline-flex min-h-14 w-full items-start gap-2.5 border px-3 py-2.5 text-left transition-[transform,background-color,border-color,color] duration-300 ease-quart-out motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                           activeStepId === step.id
-                            ? activeItemTone
-                            : "border-border bg-background text-foreground-muted motion-safe:hover:border-border-strong/35 motion-safe:hover:bg-surface/50 motion-safe:hover:text-foreground"
+                            ? NAV_ITEM_ACTIVE_CLASS
+                            : NAV_ITEM_INACTIVE_CLASS
                         }`}
                       >
                         <p className="font-label text-[9px] tracking-[0.2em] text-foreground-subtle">{step.id}</p>
@@ -426,6 +420,18 @@ export function OnboardingGuideTemplate({
                         </li>
                       ))}
                     </ul>
+
+                    <div className="mt-5 border-t border-border pt-4">
+                      <p className="font-label text-[9px] tracking-[0.2em] text-foreground-subtle">POV {step.counterpartyLabel}</p>
+                      <ul className="mt-3 space-y-2 text-sm text-foreground-muted">
+                        {step.counterpartyChecklist.map((point) => (
+                          <li key={point} className="flex items-start gap-2.5">
+                            <span aria-hidden="true" className="mt-[7px] inline-block size-[5px] bg-foreground" />
+                            <span className="break-words">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
 

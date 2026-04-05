@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CreatorEarningsBoard } from "@/components/dashboard/creator/creator-earnings-board";
+import { creatorDashboardMock } from "@/data/dashboard/creator-mock";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -11,12 +13,5 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function CreatorEarningsPage() {
-  return (
-    <div>
-      <h1 className="font-heading text-4xl tracking-tight">Pendapatan Kreator</h1>
-      <p className="mt-3 max-w-xl text-foreground-muted">
-        Lihat ringkasan payout, status pencairan escrow, dan performa campaign untuk perencanaan pendapatan yang lebih presisi.
-      </p>
-    </div>
-  );
+  return <CreatorEarningsBoard summary={creatorDashboardMock.earningsSummary} earnings={creatorDashboardMock.earnings} />;
 }

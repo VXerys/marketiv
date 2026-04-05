@@ -26,7 +26,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function Home() {
   return (
-    <main className="landing-light overflow-x-clip">
+    <main className="landing-light overflow-x-hidden">
       <MarketivHero />
       <MarketivFearSection />
       <MarketivCreatorSection />

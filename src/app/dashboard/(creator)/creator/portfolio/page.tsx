@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CreatorPortfolioBoard } from "@/components/dashboard/creator/creator-portfolio-board";
+import { creatorDashboardMock } from "@/data/dashboard/creator-mock";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -11,12 +13,5 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function CreatorPortfolioPage() {
-  return (
-    <div>
-      <h1 className="font-heading text-4xl tracking-tight">Portofolio Kreator</h1>
-      <p className="mt-3 max-w-xl text-foreground-muted">
-        Tampilkan hasil konten terbaik beserta data performa untuk memperkuat positioning profesionalmu di hadapan brand.
-      </p>
-    </div>
-  );
+  return <CreatorPortfolioBoard portfolio={creatorDashboardMock.portfolio} />;
 }

@@ -20,7 +20,7 @@ export function MarketivHero() {
   return (
     <section
       ref={rootRef}
-      className="relative min-h-screen overflow-hidden border border-border bg-background text-foreground lg:h-[100svh] lg:max-h-[100svh]"
+      className="relative w-full min-h-[100dvh] overflow-hidden overflow-x-hidden border border-border bg-background text-foreground"
     >
       <Image
         src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=2000"
@@ -62,7 +62,7 @@ export function MarketivHero() {
         </div>
       </header>
 
-      <div className="relative z-20 mx-auto grid min-h-screen w-full max-w-[1320px] grid-cols-1 px-5 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32 lg:h-[100svh] lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-6 lg:pr-10 lg:pt-30 lg:pb-10 xl:grid-cols-[minmax(0,1fr)_390px] xl:pr-14">
+      <div className="relative z-20 mx-auto grid min-h-[100dvh] w-full max-w-[1320px] grid-cols-1 px-5 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-6 lg:pr-10 lg:pt-30 lg:pb-10 xl:grid-cols-[minmax(0,1fr)_390px] xl:pr-14">
         <div className="relative z-30 flex flex-col justify-between">
           <div className="hero-season font-label mb-3 text-xs text-foreground-subtle md:mb-8">HYBRID MARKETPLACE UMKM & KREATOR</div>
 

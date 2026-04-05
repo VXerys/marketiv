@@ -6,6 +6,7 @@ export function animateUmkmCampaignWizard(root: HTMLElement) {
 
   timeline
     .from(select(".umkm-campaign-head"), { autoAlpha: 0, y: 22, duration: 0.42 })
+    .from(select(".umkm-campaign-stat"), { autoAlpha: 0, y: 12, stagger: 0.06, duration: 0.28 }, "-=0.22")
     .from(select(".umkm-campaign-step"), { autoAlpha: 0, y: 18, stagger: 0.07, duration: 0.34 }, "-=0.2")
     .from(select(".umkm-campaign-panel"), { autoAlpha: 0, y: 14, duration: 0.28 }, "-=0.14")
     .from(select(".umkm-campaign-note"), { autoAlpha: 0, y: 12, duration: 0.3 }, "-=0.15")

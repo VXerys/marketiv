@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CreatorOverview } from "@/components/dashboard/creator/creator-overview";
+import { creatorDashboardMock } from "@/data/dashboard/creator-mock";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -16,12 +18,14 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function CreatorDashboardPage() {
+  const { metrics, alerts, recommendedActions, submissions } = creatorDashboardMock;
+
   return (
-    <div className="text-foreground">
-      <h1 className="font-heading text-5xl tracking-tight">Dashboard Kreator</h1>
-      <p className="mt-4 max-w-xl text-foreground-muted">
-        Pantau peluang campaign, progres deliverable, dan performa konten agar pertumbuhan karier kreator lebih terarah.
-      </p>
-    </div>
+    <CreatorOverview
+      metrics={metrics}
+      alerts={alerts}
+      recommendedActions={recommendedActions}
+      submissions={submissions}
+    />
   );
 }

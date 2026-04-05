@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { Bot, CheckCircle2, ClipboardList, FolderClock, Sparkles } from "lucide-react";
 import { useGSAP } from "@/lib/gsap";
 import type { UmkmCampaignWizardStep } from "@/types/dashboard";
 import { animateUmkmCampaignStepChange, animateUmkmCampaignWizard } from "./umkm-campaign-wizard.animations";
@@ -329,7 +330,7 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
 
   return (
     <div ref={rootRef} className="umkm-dashboard-space space-y-5">
-      <section className="umkm-campaign-head umkm-panel border border-border p-5 md:p-6">
+      <section className="umkm-campaign-head umkm-panel rounded-2xl border border-border p-5 md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-label text-[10px] tracking-[0.2em] text-foreground-subtle">CAMPAIGN MODE BRIEF BUILDER</p>
@@ -348,10 +349,34 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
         <div className="mt-5 h-2 w-full overflow-hidden border border-border bg-surface">
           <span className="umkm-campaign-progress block h-full w-full bg-foreground" style={{ transform: `scaleX(${currentStep / WIZARD_STEPS_TOTAL})`, transformOrigin: "left center" }} />
         </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <article className="umkm-campaign-stat rounded-xl border border-border bg-[#eef4ff] px-4 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">Current Step</p>
+              <ClipboardList className="size-4 text-[#1d4ed8]" aria-hidden="true" />
+            </div>
+            <p className="mt-2 font-heading text-3xl tracking-tight text-foreground">0{currentStep}</p>
+          </article>
+          <article className="umkm-campaign-stat rounded-xl border border-border bg-[#f0f9f4] px-4 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">Campaign Drafts</p>
+              <FolderClock className="size-4 text-[#247a52]" aria-hidden="true" />
+            </div>
+            <p className="mt-2 font-heading text-3xl tracking-tight text-foreground">{createdCampaigns.length}</p>
+          </article>
+          <article className="umkm-campaign-stat rounded-xl border border-border bg-[#fff8ef] px-4 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-label text-[10px] tracking-[0.14em] text-foreground-subtle">AI Assist</p>
+              <Bot className="size-4 text-[#9c6b00]" aria-hidden="true" />
+            </div>
+            <p className="mt-2 text-sm text-foreground-muted">Aktif untuk bantu draft brief lebih cepat dan terstruktur.</p>
+          </article>
+        </div>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr] xl:items-start">
-        <article className="umkm-campaign-step umkm-panel order-2 self-start border border-border p-4 md:p-5 xl:order-1">
+      <section className="grid items-stretch gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+        <article className="umkm-campaign-step umkm-panel order-2 h-full rounded-2xl border border-border p-4 md:p-5 xl:order-1">
           <p className="font-label text-[10px] tracking-[0.18em] text-foreground-subtle">PANDUAN STEP</p>
           <div className="mt-4 space-y-2">
             {steps.map((step) => {
@@ -389,7 +414,7 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
           </div>
         </article>
 
-        <article className="umkm-campaign-panel umkm-panel order-1 self-start border border-border p-4 md:p-5 xl:order-2">
+        <article className="umkm-campaign-panel umkm-panel order-1 h-full rounded-2xl border border-border p-4 md:p-5 xl:order-2">
           {currentStep === 1 && (
             <div className="space-y-4">
               <h2 className="font-heading text-2xl tracking-tight md:text-3xl">Step 1 - Informasi Produk</h2>
@@ -418,8 +443,9 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
                     type="button"
                     onClick={generateAiBriefDraft}
                     disabled={isGeneratingAiBrief}
-                    className="inline-flex min-h-9 items-center border border-border px-3 py-1.5 font-label text-[10px] tracking-[0.16em] text-foreground transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex min-h-9 items-center gap-1.5 border border-border px-3 py-1.5 font-label text-[10px] tracking-[0.16em] text-foreground transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60"
                   >
+                    <Sparkles className="size-3.5" aria-hidden="true" />
                     {isGeneratingAiBrief ? "AI MENYUSUN..." : "BANTU SAYA DENGAN AI"}
                   </button>
                 </div>
@@ -593,14 +619,21 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
         </article>
       </section>
 
-      <section className="umkm-campaign-note umkm-panel border border-border p-5 md:p-6">
-        <h2 className="font-heading text-3xl tracking-tight">Catatan Validasi Penting</h2>
-        <p className="mt-3 text-sm leading-relaxed text-foreground-muted">
-          Jika file lebih dari 100 MB, gunakan URL Google Drive atau Dropbox yang publik dan dimulai dengan https://. Pengaturan ini mengikuti standar Campaign Mode agar proses klaim kreator dan validasi submission berjalan lancar.
-        </p>
+      <section className="umkm-campaign-note umkm-panel rounded-2xl border border-border p-5 md:p-6">
+        <div className="flex items-start gap-3">
+          <span className="inline-flex size-9 items-center justify-center rounded-full bg-[#fff4dc] text-[#9c6b00]">
+            <CheckCircle2 className="size-4" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="font-heading text-3xl tracking-tight">Catatan Validasi Penting</h2>
+            <p className="mt-3 text-sm leading-relaxed text-foreground-muted">
+              Jika file lebih dari 100 MB, gunakan URL Google Drive atau Dropbox yang publik dan dimulai dengan https://. Pengaturan ini mengikuti standar Campaign Mode agar proses klaim kreator dan validasi submission berjalan lancar.
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section className="umkm-panel border border-border p-5 md:p-6">
+      <section className="umkm-panel rounded-2xl border border-border p-5 md:p-6">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-heading text-3xl tracking-tight">Campaign Baru yang Dibuat</h2>
           <span className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">MODE DEMO (LOCAL)</span>
@@ -611,7 +644,7 @@ export function UmkmCampaignWizard({ steps }: UmkmCampaignWizardProps) {
         ) : (
           <div className="mt-4 space-y-3">
             {createdCampaigns.map((campaign) => (
-              <article key={campaign.id} className="umkm-created-card border border-border bg-surface/70 p-4">
+              <article key={campaign.id} className="umkm-created-card rounded-xl border border-border bg-surface/70 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-label text-[10px] tracking-[0.16em] text-foreground-subtle">{campaign.niche}</p>

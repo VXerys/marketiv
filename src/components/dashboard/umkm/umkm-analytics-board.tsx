@@ -123,6 +123,34 @@ function statusBadgeClass(status: AnalyticsPerformanceRow["status"]): string {
   return "border-[#f1dfc7] bg-[#fff5e9] text-[#9a5a08]";
 }
 
+function getAnalyticsPriorityClass(item: AnalyticsPerformanceRow): {
+  label: "urgent" | "watch" | "healthy";
+  rowClassName: string;
+  badgeClassName: string;
+} {
+  if (item.status === "menunggu-escrow" || item.roas < 0.12 || item.cpv > 320) {
+    return {
+      label: "urgent",
+      rowClassName: "bg-[#fff9f9]",
+      badgeClassName: "border-[#f6d2d2] bg-[#fff1f1] text-[#b63333]",
+    };
+  }
+
+  if (item.status === "berjalan" || item.roas < 0.2 || item.cpv > 260) {
+    return {
+      label: "watch",
+      rowClassName: "bg-[#fffdf8]",
+      badgeClassName: "border-[#f2e3bf] bg-[#fff9ee] text-[#9c6b00]",
+    };
+  }
+
+  return {
+    label: "healthy",
+    rowClassName: "bg-[#f7fcf8]",
+    badgeClassName: "border-[#d5eddc] bg-[#f1fbf3] text-[#1f7a42]",
+  };
+}
+
 export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnalyticsBoardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [dateRange, setDateRange] = useState<"7" | "30" | "90">("30");
@@ -295,16 +323,16 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
         </header>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+      <section className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article className={`umkm-analytics-top-card ${panelClassName} flex h-full flex-col p-5`}>
           <p className="text-sm text-slate-600">Total Pengeluaran</p>
           <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{formatRupiah(summary.totalSpend)}</p>
-          <p className="mt-2 inline-flex rounded-full border border-[#d7e4ff] bg-[#ecf3ff] px-2.5 py-1 text-xs font-medium text-[#2456bb]">
+          <p className="mt-auto inline-flex w-fit rounded-full border border-[#d7e4ff] bg-[#ecf3ff] px-2.5 py-1 text-xs font-medium text-[#2456bb]">
             {summary.trendFromHighlights} dari bulan lalu
           </p>
         </article>
 
-        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+        <article className={`umkm-analytics-top-card ${panelClassName} flex h-full flex-col p-5`}>
           <div className="flex items-start justify-between gap-2">
             <p className="text-sm text-slate-600">Total Tayangan (Views)</p>
             <svg viewBox="0 0 24 24" className="size-5 text-[#1d4ed8]" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -313,24 +341,24 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
             </svg>
           </div>
           <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{formatNumber(summary.totalViews)} Views</p>
-          <p className="mt-2 text-xs text-slate-500">Akumulasi tayangan tervalidasi dari kolaborasi aktif.</p>
+          <p className="mt-auto pt-2 text-xs text-slate-500">Akumulasi tayangan tervalidasi dari kolaborasi aktif.</p>
         </article>
 
-        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+        <article className={`umkm-analytics-top-card ${panelClassName} flex h-full flex-col p-5`}>
           <p className="text-sm text-slate-600">Cost-per-View (CPV)</p>
           <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{formatRupiah(Math.round(summary.cpv))} / View</p>
-          <p className="mt-2 text-xs text-slate-500">Semakin rendah CPV, semakin efisien biaya awareness UMKM Anda.</p>
+          <p className="mt-auto pt-2 text-xs text-slate-500">Semakin rendah CPV, semakin efisien biaya awareness UMKM Anda.</p>
         </article>
 
-        <article className={`umkm-analytics-top-card ${panelClassName} p-5`}>
+        <article className={`umkm-analytics-top-card ${panelClassName} flex h-full flex-col p-5`}>
           <p className="text-sm text-slate-600">Total Kreator Bekerja Sama</p>
           <p className="mt-3 font-heading text-3xl tracking-tight text-slate-900">{summary.uniqueCreators} Kreator</p>
-          <p className="mt-2 text-xs text-slate-500">Jumlah kreator unik yang berkolaborasi di periode terpilih.</p>
+          <p className="mt-auto pt-2 text-xs text-slate-500">Jumlah kreator unik yang berkolaborasi di periode terpilih.</p>
         </article>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-12 xl:items-start">
-        <article className={`umkm-analytics-overview ${panelClassName} p-5 xl:col-span-8`}>
+      <section className="grid items-stretch gap-4 xl:grid-cols-12">
+        <article className={`umkm-analytics-overview ${panelClassName} flex h-full flex-col p-5 xl:col-span-8`}>
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-xl font-semibold tracking-tight text-slate-900 md:text-2xl">Traksi Tayangan (Views) {dateRange} Hari Terakhir</h2>
@@ -369,7 +397,7 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
           </div>
         </article>
 
-        <article className={`umkm-analytics-bottom ${panelClassName} p-5 xl:col-span-4`}>
+        <article className={`umkm-analytics-bottom ${panelClassName} flex h-full flex-col p-5 xl:col-span-4`}>
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-xl font-semibold tracking-tight text-slate-900">Distribusi Anggaran</h2>
@@ -378,7 +406,7 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
             <span className="rounded-lg border border-[#d6deea] bg-[#f8fbff] px-3 py-1 text-xs text-slate-600">Budget Split</span>
           </div>
 
-          <div className="umkm-analytics-chart-block mt-4 h-64 rounded-xl border border-[#dbe3ee] bg-[#f9fbff] p-2">
+          <div className="umkm-analytics-chart-block mt-4 h-64 rounded-xl border border-[#dbe3ee] bg-[#f9fbff] p-2 xl:h-72">
             <div className="relative h-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -435,58 +463,74 @@ export function UmkmAnalyticsBoard({ highlights, fraudQueue, orders }: UmkmAnaly
                 <th className="px-4 py-3">Pengeluaran</th>
                 <th className="px-4 py-3">Views Didapat</th>
                 <th className="px-4 py-3">ROAS / CPV</th>
+                <th className="px-4 py-3">Priority</th>
               </tr>
             </thead>
             <tbody>
-              {performanceRows.map((item) => (
-                <tr key={item.id} className="umkm-analytics-transaction-row border-t border-[#e8edf3] odd:bg-white even:bg-[#fbfcfe]">
-                  <td className="px-4 py-3 font-medium text-slate-900">{item.campaignName}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex min-h-7 items-center rounded-md border border-[#dce8ff] bg-[#edf3ff] px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] text-[#2147a8]">
-                      {formatModeLabel(item.mode)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex min-h-7 items-center rounded-md border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${statusBadgeClass(item.status)}`}>
-                      {item.status === "menunggu-escrow" ? "Menunggu Escrow" : item.status === "berjalan" ? "Berjalan" : "Selesai"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 font-medium text-slate-900">{formatRupiah(item.spend)}</td>
-                  <td className="px-4 py-3 text-slate-700">{formatNumber(item.views)} Views</td>
-                  <td className="px-4 py-3 text-slate-700">ROAS {item.roas.toFixed(2)}x | CPV {formatRupiah(Math.round(item.cpv))}</td>
-                </tr>
-              ))}
+              {performanceRows.map((item) => {
+                const priority = getAnalyticsPriorityClass(item);
+
+                return (
+                  <tr key={item.id} className={`umkm-analytics-transaction-row border-t border-[#e8edf3] ${priority.rowClassName}`}>
+                    <td className="px-4 py-3 font-medium text-slate-900">{item.campaignName}</td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex min-h-7 items-center rounded-md border border-[#dce8ff] bg-[#edf3ff] px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] text-[#2147a8]">
+                        {formatModeLabel(item.mode)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex min-h-7 items-center rounded-md border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${statusBadgeClass(item.status)}`}>
+                        {item.status === "menunggu-escrow" ? "Menunggu Escrow" : item.status === "berjalan" ? "Berjalan" : "Selesai"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 font-medium text-slate-900">{formatRupiah(item.spend)}</td>
+                    <td className="px-4 py-3 text-slate-700">{formatNumber(item.views)} Views</td>
+                    <td className="px-4 py-3 text-slate-700">ROAS {item.roas.toFixed(2)}x | CPV {formatRupiah(Math.round(item.cpv))}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex min-h-7 items-center rounded-full border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${priority.badgeClassName}`}>
+                        {priority.label}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
         <div className="mt-4 space-y-3 md:hidden">
-          {performanceRows.map((item) => (
-            <article key={item.id} className="umkm-analytics-transaction-row rounded-xl border border-[#dbe3ee] bg-white p-4">
-              <div className="flex items-start justify-between gap-3">
-                <h3 className="text-sm font-medium text-slate-900">{item.campaignName}</h3>
-                <span className={`inline-flex min-h-7 items-center rounded-md border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${statusBadgeClass(item.status)}`}>
-                  {item.status === "menunggu-escrow" ? "Menunggu Escrow" : item.status === "berjalan" ? "Berjalan" : "Selesai"}
-                </span>
-              </div>
+          {performanceRows.map((item) => {
+            const priority = getAnalyticsPriorityClass(item);
 
-              <div className="mt-3 flex items-center justify-between gap-2 text-xs">
-                <span className="inline-flex min-h-7 items-center rounded-md border border-[#dce8ff] bg-[#edf3ff] px-2.5 font-medium uppercase tracking-[0.08em] text-[#2147a8]">
-                  {formatModeLabel(item.mode)}
-                </span>
-                <span className="text-slate-500">{formatNumber(item.views)} Views</span>
-              </div>
+            return (
+              <article key={item.id} className={`umkm-analytics-transaction-row rounded-xl border border-[#dbe3ee] bg-white p-4 ${priority.rowClassName}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-sm font-medium text-slate-900">{item.campaignName}</h3>
+                  <span className={`inline-flex min-h-7 items-center rounded-md border px-2.5 text-[11px] font-medium uppercase tracking-[0.08em] ${statusBadgeClass(item.status)}`}>
+                    {item.status === "menunggu-escrow" ? "Menunggu Escrow" : item.status === "berjalan" ? "Berjalan" : "Selesai"}
+                  </span>
+                </div>
 
-              <div className="mt-3 space-y-1.5 text-sm text-slate-600">
-                <p>
-                  Pengeluaran: <span className="font-medium text-slate-900">{formatRupiah(item.spend)}</span>
-                </p>
-                <p>
-                  ROAS / CPV: <span className="text-slate-900">{item.roas.toFixed(2)}x / {formatRupiah(Math.round(item.cpv))}</span>
-                </p>
-              </div>
-            </article>
-          ))}
+                <div className="mt-3 flex items-center justify-between gap-2 text-xs">
+                  <span className="inline-flex min-h-7 items-center rounded-md border border-[#dce8ff] bg-[#edf3ff] px-2.5 font-medium uppercase tracking-[0.08em] text-[#2147a8]">
+                    {formatModeLabel(item.mode)}
+                  </span>
+                  <span className={`inline-flex min-h-7 items-center rounded-full border px-2.5 font-medium uppercase tracking-[0.08em] ${priority.badgeClassName}`}>
+                    {priority.label}
+                  </span>
+                </div>
+
+                <div className="mt-3 space-y-1.5 text-sm text-slate-600">
+                  <p>
+                    Pengeluaran: <span className="font-medium text-slate-900">{formatRupiah(item.spend)}</span>
+                  </p>
+                  <p>
+                    ROAS / CPV: <span className="text-slate-900">{item.roas.toFixed(2)}x / {formatRupiah(Math.round(item.cpv))}</span>
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
     </div>
